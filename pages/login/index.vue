@@ -1,1 +1,7 @@
-<template>12312323</template>
+<script setup lang="ts">
+
+</script>
+
+<template>
+
+</template>

@@ -7,30 +7,20 @@ module.exports = {
     "extends": [
         "standard-with-typescript",
         "plugin:vue/vue3-essential",
-        "prettier"
     ],
-    "overrides": [
-        {
-            "env": {
-                "node": true
-            },
-            "files": [
-                ".eslintrc.{js,cjs}"
-            ],
-            "parserOptions": {
-                "sourceType": "script"
-            }
-        }
-    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
+
         "ecmaVersion": "latest",
-        "sourceType": "module"
+        "sourceType": "script"
     },
+   
     "plugins": [
         "vue",
-        "prettier"
     ],
     "rules": {
-        "prettier/prettier": 1,
+
+        "indent": 0,
+
     }
 }
