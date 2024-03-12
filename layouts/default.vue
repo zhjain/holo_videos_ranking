@@ -6,23 +6,14 @@
 
 <template>
     <div>
-        <UHeader title="STARTEND">
-            <template #logo>
+        <div class="h-12 bg-slate-100 ">
+            <div class="w-header m-auto h-full flex">
+                <h2 class=" text-center font-mine text-4xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 text-transparent bg-clip-text">
+                    title
+                </h2>
                 
-                    <h1 class="my-text text-3xl">STARTEND</h1>
-            </template>
-            <template #right>
-                <button class="my-text">asdasd</button>
-            </template>
-        </UHeader>
+            </div>
+        </div>
         <slot></slot>
     </div>
 </template>
-
-<style scoped>
-
-
-.my-text {
-    font-family: "ZCOOL KuaiLe", sans-serif;
-}
-</style>

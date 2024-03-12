@@ -8,7 +8,16 @@ module.exports = {
     './app.vue'
   ],
   theme: {
-    extend: {}
+    extend: {
+      width: {
+        header: '1260px',
+        content: '1080px'
+      },
+      fontFamily: {
+        mine: ['ZCOOL KuaiLe', 'sans-serif']
+      }
+
+    }
   },
   plugins: []
 }
