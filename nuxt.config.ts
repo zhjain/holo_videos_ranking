@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     routeRules: {
-      '/api/**': { proxy: 'http://10.0.0.167:8000/api/**', cors: true, headers: { 'access-control-allow-methods': 'GET' } },
+      '/api/**': { proxy: 'http://10.0.0.167:9090/api/**', cors: true, headers: { 'access-control-allow-methods': 'GET' } },
     }
   },
   app: {
@@ -28,4 +28,8 @@ export default defineNuxtConfig({
     },
   },
   modules: ['@nuxt/ui'],
+  devServer: {
+    host: '0.0.0.0',
+    port: 3062
+  }
 })
