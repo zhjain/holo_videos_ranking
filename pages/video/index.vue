@@ -11,7 +11,7 @@ const { data }: any = await useFetch('/api/videos', {
     <div>Video</div>
     <div>
         <div v-for="item in data?.data || []">
-            {{ item.channel_name }}
+            {{ item.video_title }}
         </div>
     </div>
 </template>
