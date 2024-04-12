@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Plyr } from 'vue-plyr';
+import VuePlyr from 'vue-plyr';
 const { data }: any = await useFetch('/api/videos', {
     method: 'GET'
 })
@@ -7,9 +7,13 @@ const { data }: any = await useFetch('/api/videos', {
 
 const plyrRef = ref<any>(null)
 
-const handleClick = () => {
-    if (plyrRef.value)
-        console.log(plyrRef.value.plyr);
+const handleClick = async () => {
+    if (plyrRef.value) {
+        console.log(plyrRef.value.player);
+        await plyrRef.value.player.togglePlay()
+        console.log(plyrRef.value.player.play);
+    }
+
 }
 
 </script>
@@ -21,9 +25,11 @@ const handleClick = () => {
             {{ item.video_title }}
         </div>
         <button @click="handleClick">132132</button>
-        <VuePlyr ref="plyrRef">
-            <div class="plyr__video-embed" v-html="data?.data[0].video_player">
-            </div>
-        </VuePlyr>
+        <ClientOnly>
+            <VuePlyr ref="plyrRef">
+                <div class="plyr__video-embed hidden" v-html="data?.data[0].video_player">
+                </div>
+            </VuePlyr>
+        </ClientOnly>
     </div>
 </template>
