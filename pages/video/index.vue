@@ -7,11 +7,12 @@ const { data }: any = await useFetch('/api/videos', {
 
 const plyrRef = ref<any>(null)
 
+const playing = ref<boolean>(false)
+
 const handleClick = async () => {
     if (plyrRef.value) {
-        console.log(plyrRef.value.player);
+        playing.value = !playing.value
         await plyrRef.value.player.togglePlay()
-        console.log(plyrRef.value.player.play);
     }
 
 }
@@ -21,15 +22,19 @@ const handleClick = async () => {
 <template>
     <div>Video</div>
     <div>
-        <div v-for="item in data?.data || []">
+        <!-- <div v-for="item in data?.data || []">
             {{ item.video_title }}
+        </div> -->
+        <UButton color="black" variant="solid" @click="handleClick">
+            {{ playing ? "暂停" : "播放"}}
+        </UButton>
+        <div class="hidden">
+            <ClientOnly>
+                <VuePlyr ref="plyrRef">
+                    <div class="plyr__video-embed" v-html="data?.data[0].video_player">
+                    </div>
+                </VuePlyr>
+            </ClientOnly>
         </div>
-        <button @click="handleClick">132132</button>
-        <ClientOnly>
-            <VuePlyr ref="plyrRef">
-                <div class="plyr__video-embed hidden" v-html="data?.data[0].video_player">
-                </div>
-            </VuePlyr>
-        </ClientOnly>
     </div>
 </template>
