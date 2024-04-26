@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     routeRules: {
-      '/api/**': { proxy: 'http://10.0.0.167:9090/api/**', cors: true, headers: { 'access-control-allow-methods': 'GET' } },
+      '/api/**': { proxy: 'http://127.0.0.1:9090/api/**', cors: true, headers: { 'access-control-allow-methods': 'GET' } },
     }
   },
   app: {
