@@ -22,9 +22,9 @@ const handleClick = async () => {
 <template>
     <div>Video</div>
     <div>
-        <!-- <div v-for="item in data?.data || []">
+        <div v-for="item in data?.data || []">
             {{ item.video_title }}
-        </div> -->
+        </div>
         <UButton color="black" variant="solid" @click="handleClick">
             {{ playing ? "暂停" : "播放"}}
         </UButton>
