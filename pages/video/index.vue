@@ -28,7 +28,7 @@ const handleClick = async () => {
         <UButton color="black" variant="solid" @click="handleClick">
             {{ playing ? "暂停" : "播放"}}
         </UButton>
-        <div class="hidden">
+        <div>
             <ClientOnly>
                 <VuePlyr ref="plyrRef">
                     <div class="plyr__video-embed" v-html="data?.data[0].video_player">
