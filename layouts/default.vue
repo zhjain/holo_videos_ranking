@@ -7,13 +7,24 @@
 <template>
     <div>
         <div class="h-12 bg-slate-100 ">
-            <div class="w-header m-auto h-full flex">
-                <h2 class=" text-center font-mine text-4xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 text-transparent bg-clip-text">
+            <div class="w-header m-auto h-full flex gap-4">
+                <h2
+                    class=" text-center font-mine text-4xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 text-transparent bg-clip-text">
                     title
                 </h2>
-                
+
+                <ULink to="/channel" class="flex items-center" active-class="text-primary"
+                    inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    channel
+                </ULink>
+                <ULink to="/video" class="flex items-center" active-class="text-primary"
+                    inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    video
+                </ULink>
             </div>
         </div>
-        <slot></slot>
+        <div class="w-content m-auto">
+            <slot></slot>
+        </div>
     </div>
 </template>
