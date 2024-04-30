@@ -21,6 +21,10 @@
                     inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
                     video
                 </ULink>
+                <ULink to="/player" class="flex items-center" active-class="text-primary"
+                    inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    player
+                </ULink>
             </div>
         </div>
         <div class="w-content m-auto">

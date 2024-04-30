@@ -23,6 +23,5 @@ const columns = [{
 </script>
 
 <template>
-        <h1>Hello World</h1>
         <UTable :columns="columns" :rows="data.data" />
 </template>
