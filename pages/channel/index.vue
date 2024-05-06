@@ -23,5 +23,5 @@ const columns = [{
 </script>
 
 <template>
-        <UTable :columns="columns" :rows="data.data" />
+    <UTable :columns="columns" :rows="data.data" />
 </template>
