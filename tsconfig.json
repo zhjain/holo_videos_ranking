@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2017", // 或更高版本，如 "es2020", "es2022", "esnext"
     "module": "esnext", // 或 "es2022", "system", "node16", "nodenext"
+    // "types": ["./types"]
     // 其他配置...
   },
   // https://nuxt.com/docs/guide/concepts/typescript

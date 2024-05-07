@@ -27,7 +27,7 @@ export default defineNuxtConfig({
       ]
     },
   },
-  modules: ['@nuxt/ui', 'nuxt-clarity-analytics'],
+  modules: ['@nuxt/ui', '@pinia/nuxt', 'nuxt-clarity-analytics'],
   devServer: {
     host: '0.0.0.0',
     port: 3062

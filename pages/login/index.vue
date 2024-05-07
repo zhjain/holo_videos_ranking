@@ -2,6 +2,9 @@
 import { string, objectAsync, minLength, type Input } from 'valibot'
 import type { FormSubmitEvent } from '#ui/types'
 
+const userStore = useUserStore()
+
+
 const router = useRouter()
 
 const schema = objectAsync({
@@ -20,13 +23,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     // Do something with event.data
     console.log(event.data)
     try {
-        const { data, code, msg } = await $fetch('/api/user-logs', {
-            method: 'POST',
-            body: {
-                username: event.data.username,
-                password: event.data.password
-            }
-        }) as unknown as any
+        const { data, code, msg } = await userStore.fetchLogin(event.data)
         if (code === 200) {
             router.push('/')
         }

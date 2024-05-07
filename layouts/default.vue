@@ -13,6 +13,10 @@
                     title
                 </h2>
 
+                <ULink to="/" class="flex items-center" active-class="text-primary"
+                    inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                    home
+                </ULink>
                 <ULink to="/channel" class="flex items-center" active-class="text-primary"
                     inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
                     channel
