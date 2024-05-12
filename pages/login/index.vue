@@ -23,13 +23,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     // Do something with event.data
     console.log(event.data)
     try {
-        const res = await userStore.fetchLogin(event.data)
-        console.log(res);
-        // if (code === 200) {
-        //     router.push('/')
-        // }
+        await userStore.fetchLogin(event.data)
+        router.push('/')
     } catch (error:any) {
-        console.log(error,'213213123')
+        console.error(error.message)
     }
 
 }
