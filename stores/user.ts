@@ -3,7 +3,7 @@ import type { User } from '~/types/user'
 
 export const useUserStore = defineStore('userStore', {
     state: () => ({
-        userinfo: ''
+        userinfo: {} as any
     }),
     actions: {
         async fetchLogin(params: any) {
