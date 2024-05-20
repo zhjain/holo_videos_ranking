@@ -3,7 +3,7 @@
 const columns = [{
     key: 'video_title',
     label: 'video_title'
-},{
+}, {
     key: 'video_id',
     label: 'video_id'
 }, {
@@ -14,7 +14,7 @@ const columns = [{
     key: 'video_view_count',
     label: 'video_view_count',
     sortable: true
-},{
+}, {
     key: 'parsed_duration',
     label: 'parsed_duration',
     sortable: true
@@ -80,9 +80,23 @@ const searchStatus = computed(() => {
     return `?completed=${selectedStatus.value[0].value}`
 })
 
+const selectedAll = ref(true)
+const selectedTypes = ref<string[]>([])
+const searchVideoType = computed(() => {
+    if (selectedAll.value) {
+        return ''
+    }
+    if (selectedTypes.value.length === 0) {
+        return ''
+    }
+    return selectedTypes.value.join(',')
+})
+
 const resetFilters = () => {
     search.value = ''
     selectedStatus.value = []
+    selectedAll.value = true
+    selectedTypes.value = []
 }
 
 // Pagination
@@ -97,17 +111,83 @@ const { data: videos, pending } = await useAsyncData<any>('videos', () => ($fetc
         '_page': page.value,
         '_limit': pageCount.value,
         '_sort': sort.value.column,
-        '_order': sort.value.direction
+        '_order': sort.value.direction,
+        '_type': searchVideoType.value
     }
 }), {
     default: () => [],
-    watch: [page, search, searchStatus, pageCount, sort]
+    watch: [page, search, searchStatus, searchVideoType, pageCount, sort]
 })
 
-const pageTotal = computed(()=> videos.value.data.total || 0 )
+let lastClickTime = 0;
+
+const handleTypeToggle = (type: string) => {
+    const currentTime = new Date().getTime();
+    const timeDiff = currentTime - lastClickTime;
+
+    if (timeDiff < 300) { // 如果两次点击间隔小于300毫秒，则认为是双击
+        // 双击事件处理：只选中当前类型
+        selectedTypes.value = [type];
+    } else {
+        // 单击事件处理：切换选中状态
+        if (selectedTypes.value.includes(type)) {
+            selectedTypes.value = selectedTypes.value.filter(t => t !== type)
+        } else {
+            selectedTypes.value.push(type)
+        }
+    }
+    selectedAll.value = selectedTypes.value.length === 0;
+    lastClickTime = currentTime;
+}
+
+const pageTotal = computed(() => videos.value.data.total || 0)
 const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.value))
 
+const editing = ref(false)
+
+const userStore = useUserStore()
+const items = [
+    [{
+        label: 'Profile',
+        avatar: {
+            src: 'https://avatars.githubusercontent.com/u/739984?v=4'
+        }
+    }], [{
+        label: 'Edit',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        shortcuts: ['E'],
+        click: () => {
+            console.log('Edit')
+        }
+    }, {
+        label: 'Duplicate',
+        icon: 'i-heroicons-document-duplicate-20-solid',
+        shortcuts: ['D'],
+        disabled: true
+    }], [{
+        label: 'Archive',
+        icon: 'i-heroicons-archive-box-20-solid'
+    }, {
+        label: 'Move',
+        icon: 'i-heroicons-arrow-right-circle-20-solid'
+    }], [{
+        label: 'Delete',
+        icon: 'i-heroicons-trash-20-solid',
+        shortcuts: ['⌘', 'D']
+    }]
+]
+
+const types = ['cover', 'origin', 'live']
+
+const handleTypeChange = async (id: string, type: string) => {
+    const res = await $fetch(`/api/videos/${id}`, {
+        method: 'PUT',
+        body: {
+            video_type: type
+        }
+    })
+}
 
 </script>
 
@@ -121,16 +201,44 @@ const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.v
         footer: { padding: 'p-4' }
     }">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-900 dark:text-white leading-tight">
-                Videos
-            </h2>
+            <div class="flex items-center justify-between gap-3 ">
+                <h2 class="font-semibold text-xl text-gray-900 dark:text-white leading-tight">
+                    Videos
+                </h2>
+                <div>
+                    <UToggle v-if="userStore.userinfo?.isAdmin" v-model="editing" on-icon="i-heroicons-pencil"
+                        off-icon="i-heroicons-pencil" />
+                </div>
+            </div>
         </template>
 
         <!-- Filters -->
-        <div class="flex items-center justify-between gap-3 px-4 py-3">
+        <div class="flex flex-col  justify-between gap-3 px-4 py-3">
             <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
 
             <USelectMenu v-model="selectedStatus" :options="todoStatus" multiple placeholder="Status" class="w-40" />
+            <div class="flex gap-2">
+                <UButton class="hover:no-underline" :color="selectedAll ? 'primary' : 'gray'" variant="link"
+                    @click="() => { selectedAll = true; selectedTypes = [] }">
+                    All
+                </UButton>
+                <UButton class="hover:no-underline" :color="selectedTypes.includes('cover') ? 'primary' : 'gray'"
+                    variant="link" @click="() => handleTypeToggle('cover')">
+                    Cover
+                </UButton>
+                <UButton class="hover:no-underline" :color="selectedTypes.includes('origin') ? 'primary' : 'gray'"
+                    variant="link" @click="() => handleTypeToggle('origin')">
+                    Origin
+                </UButton>
+                <UButton class="hover:no-underline" :color="selectedTypes.includes('live') ? 'primary' : 'gray'"
+                    variant="link" @click="() => handleTypeToggle('live')">
+                    Live
+                </UButton>
+                <UButton :color="selectedTypes.includes('unset') ? 'primary' : 'gray'" variant="link"
+                    @click="() => handleTypeToggle('unset')" class="no-underline">
+                    unset
+                </UButton>
+            </div>
         </div>
 
         <!-- Header and Action buttons -->
@@ -161,29 +269,60 @@ const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.v
             </div>
         </div>
 
-        <!-- Table -->
-        <UTable v-model="selectedRows" v-model:sort="sort" :rows="videos.data.records" :columns="columnsTable" :loading="pending"
-            sort-asc-icon="i-heroicons-arrow-up" sort-desc-icon="i-heroicons-arrow-down" sort-mode="manual"
-            class="w-full" :ui="{ td: { base: 'max-w-[0] truncate' }, default: { checkbox: { } } }"
-            @select="select">
-            <template #completed-data="{ row }">
-                <UBadge size="xs" :label="row.completed ? 'Completed' : 'In Progress'"
-                    :color="row.completed ? 'emerald' : 'orange'" variant="subtle" />
-            </template>
-            <template #publish_time-data="{row}">
-                {{formatFullDateTime(row.publish_time)}}
-            </template>
-            <template #parsed_duration-data="{row}">
-                {{formatDurationTime(row.parsed_duration)}}
-            </template>
-            <template #actions-data="{ row }">
-                <UButton v-if="!row.completed" icon="i-heroicons-check" size="2xs" color="emerald" variant="outline"
-                    :ui="{ rounded: 'rounded-full' }" square />
+        <!-- Cards -->
+        <div class="flex flex-col gap-4 p-4">
+            <UCard v-for="row in videos.data.records" :ui="{
+                base: 'hover:cursor-pointer relative',
+                background: 'hover:bg-gray-100',
+                ring: '',
+                shadow: 'shadow',
+                body: { padding: '', base: 'flex' },
+            }" :key="row.id" class="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <img :src="row.coverImage" alt="Cover Image" class="w-32 h-32 object-cover rounded-lg mr-4">
+                <div class="flex-1 mr-32">
+                    <div class="mb-2">
+                        <h3 class="font-semibold text-lg text-gray-900 dark:text-white leading-tight">{{ row.video_title
+                            }}
+                        </h3>
+                    </div>
+                    <div class="mb-2">
+                        <span class="font-medium">Publish Channel: </span>{{ row.owner_channel_title }}
+                    </div>
+                    <div class="mb-2">
+                        <span class="font-medium">View Count: </span>{{ row.video_view_count }}
+                    </div>
+                    <div class="mb-2">
+                        <span class="font-medium">Publish Time: </span>{{ formatFullDateTime(row.publish_time) }}
+                    </div>
+                    <div class="mb-2">
+                        <span class="font-medium">Duration: </span>{{ formatDurationTime(row.parsed_duration) }}
+                    </div>
+                </div>
+                <div v-if="userStore.userinfo.isAdmin && editing" class="flex absolute right-2 top-2">
+                    <USelectMenu @change="(value) => handleTypeChange(row.id, value)" v-slot="{ open }"
+                        v-model="row.video_type" :options="types">
+                        <UButton color="gray" class="flex-1 w-24 justify-between">
+                            {{ row.video_type || 'unset' }}
+                            <UIcon name="i-heroicons-chevron-right-20-solid"
+                                class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500"
+                                :class="[open && 'transform rotate-90']" />
+                        </UButton>
+                    </USelectMenu>
+                    <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
+                        <UButton :ui="{
+                            icon: {
+                                base: 'text-gray-500 hover:text-gray-700'
+                            }
+                        }" icon="i-heroicons-ellipsis-vertical-20-solid" variant="link" />
+                    </UDropdown>
+                </div>
+                <div v-else class="flex absolute right-2 top-2">
+                    <UButton color="gray" variant="ghost" class="flex-1 hover:bg-gray-100 justify-between">{{ row.video_type || 'unset' }}
+                    </UButton>
+                </div>
+            </UCard>
+        </div>
 
-                <UButton v-else icon="i-heroicons-arrow-path" size="2xs" color="orange" variant="outline"
-                    :ui="{ rounded: 'rounded-full' }" square />
-            </template>
-        </UTable>
 
         <!-- Number of rows & Pagination -->
         <template #footer>

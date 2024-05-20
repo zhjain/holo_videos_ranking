@@ -12,7 +12,7 @@ const playing = ref<boolean>(false)
 const useProxy = ref<boolean>(false)
 
 const handleClick = async () => {
-    console.log(data.value.data[0])
+    console.log(data.value.data.records[0])
     if (plyrRef.value) {
         playing.value = !playing.value
         await plyrRef.value.player.togglePlay()
@@ -32,7 +32,8 @@ const handleClick = async () => {
         <div>
             <ClientOnly>
                 <VuePlyr ref="plyrRef">
-                    <div class="plyr__video-embed" v-html="useProxy?data?.data[0].video_player_proxy:data?.data[0].video_player">
+                    <div class="plyr__video-embed"
+                        v-html="useProxy ? data?.data.records[0].video_player_proxy : data?.data.records[0].video_player">
                     </div>
                 </VuePlyr>
             </ClientOnly>

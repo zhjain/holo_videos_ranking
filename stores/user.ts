@@ -1,4 +1,4 @@
-import type { User } from '~/types/user'
+import type { UserWithToken } from '~/types/user'
 
 
 export const useUserStore = defineStore('userStore', {
@@ -9,12 +9,12 @@ export const useUserStore = defineStore('userStore', {
         async fetchLogin(params: any) {
             const authStore = useAuthStore()
             try {
-                const { data } = await $fetch<ResponseBody<User>>('/api/user-logs', {
+                const { data } = await $fetch<ResponseBody<UserWithToken>>('/api/user-logs', {
                     method: 'POST',
                     body: params,
                     
-                }) as unknown as any
-                this.userinfo = data
+                })
+                this.userinfo = data.user
                 authStore.setToken(data.token)
                 return data
             } catch (err) {

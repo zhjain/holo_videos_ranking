@@ -21,5 +21,5 @@ rm .output.zip
 #### 重启服务:
 
 ```bash
-systemctl start my-nuxt
+systemctl restart my-nuxt
 ```
