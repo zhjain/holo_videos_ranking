@@ -189,35 +189,7 @@ const handleTypeChange = async (id: string, type: string) => {
     })
 }
 const showAddDialog = ref(false)
-const video_id = ref('')
-const new_video = ref<any>({})
 
-const checkVideo = async () => {
-    const res = await ($fetch as any)(`/api/videos/utb/${video_id.value}`, {
-        method: 'GET',
-    })
-    new_video.value = res.data
-}
-
-const handleAdd = async () => {
-    const res = await $fetch('/api/videos', {
-        method: 'POST',
-        body: {
-            video_id: video_id.value,
-            video_title: new_video.value.items[0].snippet.title,
-            video_type: 'waiting',
-            owner_channel_id: new_video.value.items[0].snippet.channelId,
-            owner_channel_title: new_video.value.items[0].snippet.channelTitle,
-            publish_time: new_video.value.items[0].snippet.publishedAt,
-            video_view_count: new_video.value.items[0].statistics.viewCount,
-            video_like_count: new_video.value.items[0].statistics.likeCount,
-            // video_duration: new_video.value.items[0].statistics.viewCount,
-            // video_player: new_video.value.items[0].statistics.viewCount,
-        }
-    })
-    showAddDialog.value = false
-    videos.value.data.push(res)
-}
 
 </script>
 
@@ -376,19 +348,7 @@ const handleAdd = async () => {
         </template>
     </UCard>
     <UModal v-model="showAddDialog">
-        <div class="p-4 flex flex-col gap-2">
-            <UInput v-model="video_id" />
-            <div class="flex gap-4">
-                <UButton class="flex-1" @click="checkVideo">query</UButton>
-                <UButton class="flex-1" @click="() => { video_id = ''; new_video = {} }">clear</UButton>
-            </div>
-        </div>
-        <div v-if="Object.keys(new_video).length !== 0" class="p-4 flex flex-col gap-2">
-            <span>{{ new_video?.items[0].snippet.title }}</span>
-            <span>{{ new_video?.items[0].snippet.channelTitle }}</span>
-            <span>{{ new_video?.items[0].snippet.publishedAt }}</span>
-            <span>{{ new_video?.items[0].statistics.viewCount }}</span>
-            <UButton @click="handleAdd">add</UButton>
-        </div>
+       
+        <AddVideoDialog />
     </UModal>
 </template>
