@@ -14,7 +14,7 @@ const checkVideo = async () => {
 }
 
 const handleAdd = async () => {
-    const res = await $fetch('/api/videos', {
+    const res = await useAuthFetch('/api/videos', {
         method: 'POST',
         body: {
             video_id: video_id.value,
@@ -23,8 +23,8 @@ const handleAdd = async () => {
             owner_channel_id: new_video.value.items[0].snippet.channelId,
             owner_channel_title: new_video.value.items[0].snippet.channelTitle,
             publish_time: new_video.value.items[0].snippet.publishedAt,
-            video_view_count: new_video.value.items[0].statistics.viewCount,
-            video_like_count: new_video.value.items[0].statistics.likeCount,
+            video_view_count: Number.parseInt(new_video.value.items[0].statistics.viewCount),
+            video_like_count: Number.parseInt(new_video.value.items[0].statistics.likeCount) || 0,
             video_duration: new_video.value.items[0].contentDetails.duration,
             video_player: new_video.value.items[0].player.embedHtml,
         }

@@ -26,6 +26,7 @@ const columns = [{
     key: 'role'
 }]
 
+const userStore = useUserStore()
 
 const selectedColumns = ref(columns)
 const columnsTable = computed(() => columns.filter((column) => selectedColumns.value.includes(column)))
@@ -105,14 +106,15 @@ const page = ref(1)
 const pageCount = ref(10)
 
 // Data
-const { data: videos, pending } = await useAsyncData<any>('videos', () => ($fetch as any)(`/api/videos`, {
+const { data: videos, pending } = await useAsyncData<any>('videos', () => useAuthFetch<any>(`/api/videos`, {
     query: {
         q: search.value,
         '_page': page.value,
         '_limit': pageCount.value,
         '_sort': sort.value.column,
         '_order': sort.value.direction,
-        '_type': searchVideoType.value
+        '_type': searchVideoType.value,
+        '_admin': !!userStore?.userinfo?.isAdmin
     }
 }), {
     default: () => [],
@@ -146,48 +148,30 @@ const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.v
 
 const editing = ref(false)
 
-const userStore = useUserStore()
-const items = [
-    [{
-        label: 'Profile',
-        avatar: {
-            src: 'https://avatars.githubusercontent.com/u/739984?v=4'
-        }
-    }], [{
-        label: 'Edit',
-        icon: 'i-heroicons-pencil-square-20-solid',
-        shortcuts: ['E'],
-        click: () => {
-            console.log('Edit')
-        }
-    }, {
-        label: 'Duplicate',
-        icon: 'i-heroicons-document-duplicate-20-solid',
-        shortcuts: ['D'],
-        disabled: true
-    }], [{
-        label: 'Archive',
-        icon: 'i-heroicons-archive-box-20-solid'
-    }, {
-        label: 'Move',
-        icon: 'i-heroicons-arrow-right-circle-20-solid'
-    }], [{
-        label: 'Delete',
-        icon: 'i-heroicons-trash-20-solid',
-        shortcuts: ['⌘', 'D']
-    }]
-]
 
-const types = ['cover', 'origin', 'live']
+const typess = [{
+    label: 'Cover',
+    value: 'cover'
+}, {
+    label: 'Origin',
+    value: 'origin'
+}, {
+    label: 'Live',
+    value: 'live'
+}, {
+    label: 'Waiting',
+    value: 'waiting',
+    needAdmin: true
+}, {
+    label: 'Rejected',
+    value: 'rejected',
+    needAdmin: true
+}, {
+    label: 'Unset',
+    value: 'unset'
+}]
 
-const handleTypeChange = async (id: string, type: string) => {
-    const res = await $fetch(`/api/videos/${id}`, {
-        method: 'PUT',
-        body: {
-            video_type: type
-        }
-    })
-}
+
 const showAddDialog = ref(false)
 
 
@@ -224,22 +208,13 @@ const showAddDialog = ref(false)
                     @click="() => { selectedAll = true; selectedTypes = [] }">
                     All
                 </UButton>
-                <UButton class="hover:no-underline" :color="selectedTypes.includes('cover') ? 'primary' : 'gray'"
-                    variant="link" @click="() => handleTypeToggle('cover')">
-                    Cover
-                </UButton>
-                <UButton class="hover:no-underline" :color="selectedTypes.includes('origin') ? 'primary' : 'gray'"
-                    variant="link" @click="() => handleTypeToggle('origin')">
-                    Origin
-                </UButton>
-                <UButton class="hover:no-underline" :color="selectedTypes.includes('live') ? 'primary' : 'gray'"
-                    variant="link" @click="() => handleTypeToggle('live')">
-                    Live
-                </UButton>
-                <UButton :color="selectedTypes.includes('unset') ? 'primary' : 'gray'" variant="link"
-                    @click="() => handleTypeToggle('unset')" class="no-underline">
-                    unset
-                </UButton>
+                <template v-for="btn in typess" :key="btn.value">
+                    <UButton v-if="!btn.needAdmin || userStore.userinfo?.isAdmin" class="hover:no-underline"
+                        :color="selectedTypes.includes(btn.value) ? 'primary' : 'gray'" variant="link"
+                        @click="() => handleTypeToggle(btn.value)">
+                        {{ btn.label }}
+                    </UButton>
+                </template>
             </div>
         </div>
 
@@ -266,57 +241,7 @@ const showAddDialog = ref(false)
 
         <!-- Cards -->
         <div class="flex flex-col gap-4 p-4">
-            <UCard v-for="row in videos.data.records" :ui="{
-                base: 'hover:cursor-pointer relative',
-                background: 'hover:bg-gray-100',
-                ring: '',
-                shadow: 'shadow',
-                body: { padding: '', base: 'flex' },
-            }" :key="row.id" class="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <img :src="row.coverImage" alt="Cover Image" class="w-32 h-32 object-cover rounded-lg mr-4">
-                <div class="flex-1 mr-32">
-                    <div class="mb-2">
-                        <h3 class="font-semibold text-lg text-gray-900 dark:text-white leading-tight">{{ row.video_title
-                            }}
-                        </h3>
-                    </div>
-                    <div class="mb-2">
-                        <span class="font-medium">Publish Channel: </span>{{ row.owner_channel_title }}
-                    </div>
-                    <div class="mb-2">
-                        <span class="font-medium">View Count: </span>{{ row.video_view_count }}
-                    </div>
-                    <div class="mb-2">
-                        <span class="font-medium">Publish Time: </span>{{ formatFullDateTime(row.publish_time) }}
-                    </div>
-                    <div class="mb-2">
-                        <span class="font-medium">Duration: </span>{{ formatDurationTime(row.parsed_duration) }}
-                    </div>
-                </div>
-                <div v-if="userStore.userinfo.isAdmin && editing" class="flex absolute right-2 top-2">
-                    <USelectMenu @change="(value) => handleTypeChange(row.id, value)" v-slot="{ open }"
-                        v-model="row.video_type" :options="types">
-                        <UButton color="gray" class="flex-1 w-24 justify-between">
-                            {{ row.video_type || 'unset' }}
-                            <UIcon name="i-heroicons-chevron-right-20-solid"
-                                class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500"
-                                :class="[open && 'transform rotate-90']" />
-                        </UButton>
-                    </USelectMenu>
-                    <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
-                        <UButton :ui="{
-                            icon: {
-                                base: 'text-gray-500 hover:text-gray-700'
-                            }
-                        }" icon="i-heroicons-ellipsis-vertical-20-solid" variant="link" />
-                    </UDropdown>
-                </div>
-                <div v-else class="flex absolute right-2 top-2">
-                    <UButton color="gray" variant="ghost" class="flex-1 hover:bg-gray-100 justify-between">{{
-                        row.video_type || 'unset' }}
-                    </UButton>
-                </div>
-            </UCard>
+            <VideoCard v-for="video in videos.data.records" :key="video.id" :video="video" :editing="editing" />
         </div>
 
 
@@ -348,7 +273,7 @@ const showAddDialog = ref(false)
         </template>
     </UCard>
     <UModal v-model="showAddDialog">
-       
+
         <AddVideoDialog />
     </UModal>
 </template>
