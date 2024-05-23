@@ -31,6 +31,8 @@ const handleAdd = async () => {
     })
     // videos.value.data.push(res)
 }
+const authStore = useAuthStore()
+const showAlert = ref(true)
 </script>
 
 <template>
@@ -41,7 +43,12 @@ const handleAdd = async () => {
             <UButton class="flex-1" @click="() => { video_id = ''; new_video = {} }">clear</UButton>
         </div>
     </div>
-    <div v-if="Object.keys(new_video).length !== 0" class="p-4 flex flex-col gap-2">
+    <div v-if="Object.keys(new_video).length !== 0" class="p-4 flex flex-col gap-4">
+        <UAlert v-if="!authStore.isLoggedIn && showAlert" color="yellow" variant="subtle" :title="$t('attention')"
+            :description="$t('attention_content')"
+            :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'yellow', variant: 'link', padded: false }" 
+            @click="console.log(123123);"
+            />
         <template v-if="need_add">
             <span>{{ new_video?.items[0].snippet.title }}</span>
             <span>{{ new_video?.items[0].snippet.channelTitle }}</span>

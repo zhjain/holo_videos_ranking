@@ -27,8 +27,21 @@ export default defineNuxtConfig({
       ]
     },
   },
-  modules: ['@nuxt/ui', '@pinia/nuxt'], // , 'nuxt-clarity-analytics'
-
+  modules: ['@nuxt/ui', '@nuxtjs/i18n', '@pinia/nuxt'], // , 'nuxt-clarity-analytics'
+  i18n: {
+    locales: [
+      {
+        code: 'en',
+        file: 'en.json'
+      },
+      {
+        code: 'zh_CN',
+        file: 'zh_CN.json'
+      },
+    ],
+    langDir: 'locales',
+    defaultLocale: 'zh_CN'
+  },
   devServer: {
     host: '0.0.0.0',
     port: 3062
