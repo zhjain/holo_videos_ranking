@@ -3,7 +3,6 @@
 export const useAuthFetch = <Data = any>(url: string, fetchOptions: any = {}) => {
     const authStore = useAuthStore();
     const token = authStore.getToken();
-    console.log(token);
     if (!token)
         return $fetch<Data>(url, fetchOptions);
 

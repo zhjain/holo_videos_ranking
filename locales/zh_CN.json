@@ -1,7 +1,9 @@
 {
-    "channel":"频道",
-    "video":"视频",
-    "home":"首页",
-    "attention":"注意!",
-    "attention_content":"未登录用户无法查看自己提交的视频的状态。请登录以跟踪您的提交状态并享受更多功能。"
+  "channel": "频道",
+  "video": "视频",
+  "home": "首页",
+  "attention": "注意!",
+  "attention_content": "未登录用户无法查看自己提交的视频的状态。请登录以跟踪您的提交状态并享受更多功能。",
+  "utb_video_not_found": "找不到视频, 请输入正确的utb视频id",
+  "error": "错误!"
 }

@@ -56,8 +56,9 @@ const handleTypeChange = async (id: string, type: string) => {
         shadow: 'shadow',
         body: { padding: '', base: 'flex' },
     }" class="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-        <img :src="video.coverImage" alt="Cover Image" class="w-32 h-32 object-cover rounded-lg mr-4">
-        <div class="flex-1 mr-32">
+        <img @click="$router.push(`/video/${video.id}`)" :src="video.coverImage" alt="Cover Image"
+            class="w-32 h-32 object-cover rounded-lg mr-4">
+        <div @click="$router.push(`/video/${video.id}`)" class="flex-1 mr-32">
             <div class="mb-2">
                 <h3 class="font-semibold text-lg text-gray-900 dark:text-white leading-tight">{{ video.video_title
                     }}

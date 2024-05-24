@@ -5,10 +5,14 @@ const new_video = ref<any>({})
 
 const need_add = ref(false)
 
+const find_nothing = ref(false)
+
 const checkVideo = async () => {
+    find_nothing.value = false
     const res = await ($fetch as any)(`/api/videos/utb/${video_id.value}`, {
         method: 'GET',
     })
+    find_nothing.value = !res.data.items && !res.data.id;
     need_add.value = (res.code === 200)
     new_video.value = res.data
 }
@@ -44,12 +48,15 @@ const showAlert = ref(true)
         </div>
     </div>
     <div v-if="Object.keys(new_video).length !== 0" class="p-4 flex flex-col gap-4">
-        <UAlert v-if="!authStore.isLoggedIn && showAlert" color="yellow" variant="subtle" :title="$t('attention')"
-            :description="$t('attention_content')"
-            :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'yellow', variant: 'link', padded: false }" 
-            @click="console.log(123123);"
-            />
-        <template v-if="need_add">
+        <UAlert v-if="!authStore.isLoggedIn && !find_nothing && need_add && showAlert" color="yellow" variant="subtle"
+            :title="$t('attention')" :description="$t('attention_content')"
+            :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'yellow', variant: 'link', padded: false }"
+            @close="showAlert = false" />
+        <template v-if="find_nothing">
+            <UAlert icon="i-heroicons-command-line" color="red" variant="subtle" :title="$t('error')"
+                :description="$t('utb_video_not_found')" />
+        </template>
+        <template v-else-if="need_add">
             <span>{{ new_video?.items[0].snippet.title }}</span>
             <span>{{ new_video?.items[0].snippet.channelTitle }}</span>
             <span>{{ new_video?.items[0].snippet.publishedAt }}</span>
@@ -64,7 +71,7 @@ const showAlert = ref(true)
             <span>{{ new_video?.publish_time }}</span>
             <span>{{ new_video?.video_view_count }}</span>
             <span>{{ new_video?.video_duration }}</span>
-            <!-- <span>{{ new_video?.items[0].player.embedHtml }}</span> -->
+            <UButton>details</UButton>
         </template>
     </div>
 </template>
