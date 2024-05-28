@@ -1,71 +1,6 @@
 <script setup lang="ts">
 
-const columns = [{
-    key: 'video_title',
-    label: 'video_title'
-}, {
-    key: 'video_id',
-    label: 'video_id'
-}, {
-    key: 'publish_time',
-    label: 'publish_time',
-    sortable: true
-}, {
-    key: 'video_view_count',
-    label: 'video_view_count',
-    sortable: true
-}, {
-    key: 'parsed_duration',
-    label: 'parsed_duration',
-    sortable: true
-}, {
-    key: 'owner_channel_title',
-    label: 'owner_channel_title',
-    sortable: true
-}, {
-    key: 'role'
-}]
-
 const userStore = useUserStore()
-
-const selectedColumns = ref(columns)
-const columnsTable = computed(() => columns.filter((column) => selectedColumns.value.includes(column)))
-
-// Selected Rows
-const selectedRows = ref<any>([])
-
-function select(row: any) {
-    const index = selectedRows.value.findIndex((item: any) => item.id === row.id)
-    if (index === -1) {
-        selectedRows.value.push(row)
-    } else {
-        selectedRows.value.splice(index, 1)
-    }
-}
-// Actions
-const actions = [
-    [{
-        key: 'completed',
-        label: 'Completed',
-        icon: 'i-heroicons-check'
-    }], [{
-        key: 'uncompleted',
-        label: 'In Progress',
-        icon: 'i-heroicons-arrow-path'
-    }]
-]
-
-// Filters
-const todoStatus = [{
-    key: 'uncompleted',
-    label: 'In Progress',
-    value: false
-}, {
-    key: 'completed',
-    label: 'Completed',
-    value: true
-}]
-
 
 const search = ref('')
 const selectedStatus = ref<any>([])
@@ -199,10 +134,9 @@ const showAddDialog = ref(false)
         </template>
 
         <!-- Filters -->
-        <div class="flex flex-col  justify-between gap-3 px-4 py-3">
+        <div class="flex flex-col justify-between gap-3 px-4 py-3">
             <UInput v-model="search" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
 
-            <USelectMenu v-model="selectedStatus" :options="todoStatus" multiple placeholder="Status" class="w-40" />
             <div class="flex gap-2">
                 <UButton class="hover:no-underline" :color="selectedAll ? 'primary' : 'gray'" variant="link"
                     @click="() => { selectedAll = true; selectedTypes = [] }">
