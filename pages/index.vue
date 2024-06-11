@@ -40,4 +40,4 @@ async function fetchRankings(page: number) {
                         <VideoRankingCard :video="item" />
                 </template>
         </div>
-</template> 
+</template>
