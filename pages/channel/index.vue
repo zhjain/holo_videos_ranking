@@ -1,6 +1,9 @@
 <script setup lang="ts">
 
 const columns = [{
+    key: 'channel_avatar',
+    label: 'avatar',
+}, {
     key: 'channel_nick',
     label: 'channel_nick'
 }, {
@@ -27,7 +30,7 @@ const columnsTable = computed(() => columns.filter((column) => selectedColumns.v
 const selectedRows = ref<any>([])
 
 function select(row: any) {
-    const index = selectedRows.value.findIndex((item:any) => item.id === row.id)
+    const index = selectedRows.value.findIndex((item: any) => item.id === row.id)
     if (index === -1) {
         selectedRows.value.push(row)
     } else {
@@ -97,7 +100,7 @@ const { data: channels, pending } = await useAsyncData<any>('channels', () => ($
     default: () => [],
     watch: [page, search, searchStatus, pageCount, sort]
 })
-const pageTotal = computed(()=> channels.value.data.total || 0 )
+const pageTotal = computed(() => channels.value.data.total || 0)
 const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.value))
 
@@ -154,17 +157,19 @@ const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.v
         </div>
 
         <!-- Table -->
-        <UTable v-model="selectedRows" v-model:sort="sort" :rows="channels.data.records" :columns="columnsTable" :loading="pending"
-            sort-asc-icon="i-heroicons-arrow-up" sort-desc-icon="i-heroicons-arrow-down" sort-mode="manual"
-            class="w-full" :ui="{ td: { base: 'max-w-[0] truncate' }, default: { checkbox: {  } } }"
+        <UTable v-model="selectedRows" v-model:sort="sort" :rows="channels.data.records" :columns="columnsTable"
+            :loading="pending" sort-asc-icon="i-heroicons-arrow-up" sort-desc-icon="i-heroicons-arrow-down"
+            sort-mode="manual" class="w-full" :ui="{ td: { base: 'max-w-[0] truncate' }, default: { checkbox: {} } }"
             @select="select">
             <template #completed-data="{ row }">
                 <UBadge size="xs" :label="row.completed ? 'Completed' : 'In Progress'"
                     :color="row.completed ? 'emerald' : 'orange'" variant="subtle" />
             </template>
-
-            <template #channel_created_time-data="{row}">
-                {{formatFullDateTime(row.channel_created_time)}}
+            <template #channel_avatar-data="{ row }">
+                <UAvatar :src="row.channel_avatar" />
+            </template>
+            <template #channel_created_time-data="{ row }">
+                {{ formatFullDateTime(row.channel_created_time) }}
             </template>
             <template #actions-data="{ row }">
                 <UButton v-if="!row.completed" icon="i-heroicons-check" size="2xs" color="emerald" variant="outline"
