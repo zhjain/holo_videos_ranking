@@ -104,6 +104,9 @@ const pageTotal = computed(() => channels.value.data.total || 0)
 const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1)
 const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.value))
 
+const showAddDialog = ref(false)
+
+
 </script>
 
 <template>
@@ -135,8 +138,10 @@ const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.v
 
                 <USelect v-model="pageCount" :options="[3, 5, 10, 20, 30, 40]" class="me-2 w-20" size="xs" />
             </div>
-
             <div class="flex gap-1.5 items-center">
+                <UButton v-if="!useUserStore().userinfo?.username" @click="() => { showAddDialog = true }" color="gray">
+                    add
+                    Channel</UButton>
                 <UDropdown v-if="selectedRows.length > 1" :items="actions" :ui="{ width: 'w-36' }">
                     <UButton icon="i-heroicons-chevron-down" trailing color="gray" size="xs">
                         Mark as
@@ -207,4 +212,8 @@ const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.v
             </div>
         </template>
     </UCard>
+    <UModal v-model="showAddDialog">
+
+        <AddChannelDialog />
+    </UModal>
 </template>
