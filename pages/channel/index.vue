@@ -19,6 +19,9 @@ const columns = [{
     label: 'channel_name',
     sortable: true
 }, {
+    key: 'actions',
+    label: 'action'
+}, {
     key: 'role'
 }]
 
@@ -162,7 +165,7 @@ const showAddDialog = ref(false)
         </div>
 
         <!-- Table -->
-        <UTable v-model="selectedRows" v-model:sort="sort" :rows="channels.data.records" :columns="columnsTable"
+        <!-- <UTable v-model="selectedRows" v-model:sort="sort" :rows="channels.data.records" :columns="columnsTable"
             :loading="pending" sort-asc-icon="i-heroicons-arrow-up" sort-desc-icon="i-heroicons-arrow-down"
             sort-mode="manual" class="w-full" :ui="{ td: { base: 'max-w-[0] truncate' }, default: { checkbox: {} } }"
             @select="select">
@@ -177,14 +180,13 @@ const showAddDialog = ref(false)
                 {{ formatFullDateTime(row.channel_created_time) }}
             </template>
             <template #actions-data="{ row }">
-                <UButton v-if="!row.completed" icon="i-heroicons-check" size="2xs" color="emerald" variant="outline"
-                    :ui="{ rounded: 'rounded-full' }" square />
-
-                <UButton v-else icon="i-heroicons-arrow-path" size="2xs" color="orange" variant="outline"
-                    :ui="{ rounded: 'rounded-full' }" square />
+                <UButton size="2xs" color="emerald" variant="outline"
+                    :ui="{ rounded: 'rounded-md' }" square @click="() => $router.push(`/channel/${row.channel_handle}`)" >details</UButton>
             </template>
-        </UTable>
-
+        </UTable> -->
+        <div class="flex flex-col gap-4 p-4">
+            <ChannelCard v-for="channel in channels.data.records" :key="channel.id" :channel="channel" />
+        </div>
         <!-- Number of rows & Pagination -->
         <template #footer>
             <div class="flex flex-wrap justify-between items-center">
