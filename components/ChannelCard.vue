@@ -55,21 +55,25 @@ const items = [
         shadow: 'shadow',
         body: { padding: '', base: 'flex' },
     }" class="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-        <UAvatar :src="channel.channel_avatar" />
-        <div @click="$router.push(`/channel/${channel.channel_custom_url}`)" class="flex-1 mr-32">
-            <div class="mb-2">
-                <h3 class="font-semibold text-lg text-gray-900 dark:text-white leading-tight">{{ channel.channel_name
+        <ULink :to="`/channel/${channel.channel_custom_url}`" as="div" target="_blank" >
+            <UAvatar :src="channel.channel_avatar" />
+            <div class="flex-1 mr-32"> <!-- @click="$router.push(`/channel/${channel.channel_custom_url}`)"-->
+                <div class="mb-2">
+                    <h3 class="font-semibold text-lg text-gray-900 dark:text-white leading-tight">{{
+                        channel.channel_name
+                        }}
+                    </h3>
+                </div>
+                <div class="mb-2">
+                    <span class="font-medium">Subscriber Count: </span>{{ channel.channel_subscriber_count }}
+                </div>
+                <div class="mb-2">
+                    <span class="font-medium">Created Time: </span>{{ formatFullDateTime(channel.channel_created_time)
                     }}
-                </h3>
-            </div>
-            <div class="mb-2">
-                <span class="font-medium">Subscriber Count: </span>{{ channel.channel_subscriber_count }}
-            </div>
-            <div class="mb-2">
-                <span class="font-medium">Created Time: </span>{{ formatFullDateTime(channel.channel_created_time) }}
-            </div>
+                </div>
 
-        </div>
+            </div>
+        </ULink>
         <!-- <div v-if="userStore.userinfo.isAdmin && editing" class="flex absolute right-2 top-2">
             <USelectMenu @change="(value) => handleTypeChange(channel.id, value)" v-slot="{ open }"
                 v-model="channel.channel_type" :options="types">

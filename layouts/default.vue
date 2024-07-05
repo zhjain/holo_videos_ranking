@@ -10,7 +10,7 @@
             <div class="w-header m-auto h-full flex justify-between">
                 <h2
                     class=" text-center font-mine text-4xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 text-transparent bg-clip-text">
-                    title
+                    startend
                 </h2>
                 <div class="flex gap-4">
                     <ULink to="/" class="flex items-center" active-class="text-primary"
