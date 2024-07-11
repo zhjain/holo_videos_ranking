@@ -9,10 +9,7 @@ const links = [{
     icon: 'i-heroicons-play-circle',
     to: `/channel/${route.params.nick}/videos`
 },
-    // 频道数据图表
-
-
-{
+{ // 频道数据图表
     label: 'Chart',
     icon: 'i-heroicons-chart-pie',
     to: `/channel/${route.params.nick}/charts`

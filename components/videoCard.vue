@@ -5,36 +5,40 @@ defineProps<{
 }>()
 
 const userStore = useUserStore()
-const items = [
-    [{
-        label: 'Profile',
-        avatar: {
-            src: 'https://avatars.githubusercontent.com/u/739984?v=4'
-        }
-    }], [{
-        label: 'Edit',
-        icon: 'i-heroicons-pencil-square-20-solid',
-        shortcuts: ['E'],
-        click: () => {
-            console.log('Edit')
-        }
-    }, {
-        label: 'Duplicate',
-        icon: 'i-heroicons-document-duplicate-20-solid',
-        shortcuts: ['D'],
-        disabled: true
-    }], [{
-        label: 'Archive',
-        icon: 'i-heroicons-archive-box-20-solid'
-    }, {
-        label: 'Move',
-        icon: 'i-heroicons-arrow-right-circle-20-solid'
-    }], [{
-        label: 'Delete',
-        icon: 'i-heroicons-trash-20-solid',
-        shortcuts: ['⌘', 'D']
-    }]
-]
+const items = (id: string) =>
+    [
+        [{
+            label: 'Profile',
+            avatar: {
+                src: 'https://avatars.githubusercontent.com/u/739984?v=4'
+            }
+        }], [{
+            label: 'Edit',
+            icon: 'i-heroicons-pencil-square-20-solid',
+            shortcuts: ['E'],
+            click: () => {
+                console.log('Edit')
+            }
+        }, {
+            label: 'Duplicate',
+            icon: 'i-heroicons-document-duplicate-20-solid',
+            shortcuts: ['D'],
+            disabled: true
+        }], [{
+            label: 'Archive',
+            icon: 'i-heroicons-archive-box-20-solid'
+        }, {
+            label: 'Move',
+            icon: 'i-heroicons-arrow-right-circle-20-solid'
+        }], [{
+            label: 'Delete',
+            icon: 'i-heroicons-trash-20-solid',
+            shortcuts: ['⌘', 'D'],
+            click: () => {
+                handleTypeChange(id, 'deleted')
+            }
+        }]
+    ]
 
 
 const types = ['cover', 'origin', 'live']
@@ -46,6 +50,7 @@ const handleTypeChange = async (id: string, type: string) => {
         }
     })
 }
+
 </script>
 
 <template>
@@ -87,7 +92,7 @@ const handleTypeChange = async (id: string, type: string) => {
                         :class="[open && 'transform rotate-90']" />
                 </UButton>
             </USelectMenu>
-            <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
+            <UDropdown :items="items(video.id)" :popper="{ placement: 'bottom-start' }">
                 <UButton :ui="{
                     icon: {
                         base: 'text-gray-500 hover:text-gray-700'

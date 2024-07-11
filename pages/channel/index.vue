@@ -109,6 +109,12 @@ const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.v
 
 const showAddDialog = ref(false)
 
+const updateAllChannels = async () => {
+    await useAuthFetch('/api/channels/update-all', {
+        lazy: true,
+        server: false
+    })
+}
 
 </script>
 
@@ -145,11 +151,8 @@ const showAddDialog = ref(false)
                 <UButton v-if="!useUserStore().userinfo?.username" @click="() => { showAddDialog = true }" color="gray">
                     add
                     Channel</UButton>
-                <UDropdown v-if="selectedRows.length > 1" :items="actions" :ui="{ width: 'w-36' }">
-                    <UButton icon="i-heroicons-chevron-down" trailing color="gray" size="xs">
-                        Mark as
-                    </UButton>
-                </UDropdown>
+                <UButton v-if="!useUserStore().userinfo?.username" @click="() => { updateAllChannels() }" color="gray">
+                    update all channels</UButton>
 
                 <USelectMenu v-model="selectedColumns" :options="columns" multiple>
                     <UButton icon="i-heroicons-view-columns" color="gray" size="xs">
