@@ -1,25 +1,28 @@
 <template>
     <div class="main-layout">
-        <header>
-            <div class="navbar bg-base-100">
-              <div class="flex-1">
-                <a class="btn btn-ghost normal-case text-xl">我的应用</a>
+        <header v-if="false">
+            <div class="navbar bg-base-100 flex justify-center">
+              <div class="flex-none">
+                <router-link to="/" class="btn btn-ghost normal-case text-xl">我的应用</router-link>
+              </div>
+              <div class="flex-auto justify-center">
+                <ul class="menu menu-horizontal px-1 space-x-4">
+                  <li><router-link :to="{ name: 'Home' }" class="btn btn-ghost rounded-lg text-lg font-semibold transition-colors duration-300 hover:bg-primary hover:text-white" :class="{ 'bg-primary text-white': isRouteActive('Home') }">首页</router-link></li>
+                  <li><router-link :to="{ name: 'Channel' }" class="btn btn-ghost rounded-lg text-lg font-semibold transition-colors duration-300 hover:bg-primary hover:text-white" :class="{ 'bg-primary text-white': isRouteActive('Channel') }">频道</router-link></li>
+                  <li><router-link :to="{ name: 'Video' }" class="btn btn-ghost rounded-lg text-lg font-semibold transition-colors duration-300 hover:bg-primary hover:text-white" :class="{ 'bg-primary text-white': isRouteActive('Video') }">视频</router-link></li>
+                </ul>
               </div>
               <div class="flex-none">
-                <ul class="menu menu-horizontal px-1">
-                  <li><a>首页</a></li>
-                  <li>
-                    <details>
-                      <summary>
-                        更多
-                      </summary>
-                      <ul class="p-2 bg-base-100">
-                        <li><a>关于我们</a></li>
-                        <li><a>联系我们</a></li>
-                      </ul>
-                    </details>
-                  </li>
-                </ul>
+                <div class="dropdown dropdown-end">
+                  <label tabindex="0" class="avatar">
+                    <div class="w-8 rounded-full border">
+                      <img src="@/assets/png/0.png" alt="" />
+                    </div>
+                  </label>
+                </div>
+                <a href="https://github.com/your-github-profile" target="_blank" class="avatar">
+                  <Icon icon="mdi:github" class="text-3xl" />
+                </a>
               </div>
             </div>
         </header>
@@ -32,14 +35,20 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { Icon } from '@iconify/vue'
 
-export default defineComponent({
-    name: 'MainLayout'
-})
+const route = useRoute()
+
+const isRouteActive = (routeName: string) => {
+    return route.name === routeName || route.path.startsWith('/' + routeName.toLowerCase())
+}
 </script>
 
 <style scoped>
-/* 在这里添加您的样式 */
+.active {
+  background-color: #ddd;
+  color: #333;
+}
 </style>

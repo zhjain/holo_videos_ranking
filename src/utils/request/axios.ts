@@ -6,7 +6,7 @@ import axios, {
 
 // 创建axios实例
 const instance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: '/api',
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
