@@ -1,4 +1,4 @@
-import { get, post, put, del } from './api'
+import { get, post, put, del } from '@/utils/request/http'
 
 export const getChannels = () => {
   return get('/channels')
