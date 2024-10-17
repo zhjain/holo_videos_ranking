@@ -1,6 +1,6 @@
 <template>
     <div class="main-layout">
-        <header v-if="false">
+        <header>
             <div class="navbar bg-base-100 flex justify-center">
               <div class="flex-none">
                 <router-link to="/" class="btn btn-ghost normal-case text-xl">我的应用</router-link>
@@ -13,14 +13,14 @@
                 </ul>
               </div>
               <div class="flex-none">
-                <div class="dropdown dropdown-end">
+                <!-- <div class="dropdown dropdown-end">
                   <label tabindex="0" class="avatar">
                     <div class="w-8 rounded-full border">
                       <img src="@/assets/png/0.png" alt="" />
                     </div>
                   </label>
-                </div>
-                <a href="https://github.com/your-github-profile" target="_blank" class="avatar">
+                </div> -->
+                <a href="https://github.com/zhjain/holo_videos_ranking" target="_blank" class="avatar">
                   <Icon icon="mdi:github" class="text-3xl" />
                 </a>
               </div>

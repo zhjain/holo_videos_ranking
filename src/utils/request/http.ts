@@ -1,19 +1,45 @@
-import axios from './axios'
+import axios from "./axios";
+import type { AxiosRequestConfig } from "axios";
 
-export const get = (url: string, params?: any) => {
-  return axios.get(url, { params })
-}
+type HttpMethod = "get" | "post" | "put" | "delete";
 
-export const post = (url: string, data?: any) => {
-  return axios.post(url, data)
-}
+const request =
+  <T = any, R = ResponseBody<T>>(method: HttpMethod) =>
+  (url: string, data?: any, config?: AxiosRequestConfig): Promise<R> => {
+    const requestConfig: AxiosRequestConfig = {
+      ...config,
+      method,
+      url,
+    };
+    if (method === "get" || method === "delete") {
+      requestConfig.params = data;
+    } else {
+      requestConfig.data = data;
+    }
+    return axios(requestConfig);
+  };
 
-export const put = (url: string, data?: any) => {
-  return axios.put(url, data)
-}
+export const get = <T = any, R = ResponseBody<T>>(
+  url: string,
+  params?: any,
+  config?: AxiosRequestConfig
+) => request<T, R>("get")(url, params, config);
 
-export const del = (url: string) => {
-  return axios.delete(url)
-}
+export const post = <T = any, R = ResponseBody<T>>(
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig
+) => request<T, R>("post")(url, data, config);
 
-// 可以根据需要添加更多方法
+export const put = <T = any, R = ResponseBody<T>>(
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig
+) => request<T, R>("put")(url, data, config);
+
+export const del = <T = any, R = ResponseBody<T>>(
+  url: string,
+  params?: any,
+  config?: AxiosRequestConfig
+) => request<T, R>("delete")(url, params, config);
+
