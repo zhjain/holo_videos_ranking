@@ -1,2 +1,4 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<div class="space-y-4">
+    <h1 class="text-2xl font-bold">首页</h1>
+    <p>欢迎来到我们的网站</p>
+</div>
