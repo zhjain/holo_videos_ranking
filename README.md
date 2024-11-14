@@ -1,38 +1,25 @@
-# sv
+### 本地打包
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
+#### 打包命令:
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+bun run build
 ```
 
-## Developing
+#### 将打包后的build文件夹压缩成.zip文件
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### 上传到服务器后
+
+#### 删除旧文件夹, 解压并删除压缩包
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+rm -r build
+unzip build.zip -d build
+rm build.zip
 ```
 
-## Building
-
-To create a production version of your app:
+#### 重启服务:
 
 ```bash
-npm run build
+systemctl restart my-sveltekit
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

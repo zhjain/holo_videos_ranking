@@ -1,6 +1,7 @@
 import type { PageLoad } from './$types'
 import { dev } from '$app/environment'
 
+
 export type HistoricalData = {
     date: string
     video_view_count: number
