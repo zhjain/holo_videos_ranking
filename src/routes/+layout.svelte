@@ -1,5 +1,6 @@
 <script lang="ts">
-    import Navbar from "../components/nav/Navbar.svelte"
+    import { page } from '$app/stores'
+    import Navbar from "$lib/components/nav/Navbar.svelte"
     import "../app.css"
 </script>
 
@@ -10,7 +11,9 @@
 </svelte:head>
 
 <div class="min-h-screen bg-gray-100 dark:bg-gray-800">
-    <Navbar />
+    {#if $page.route.id !== "/login"}
+        <Navbar />
+    {/if}
 
     <!-- 主要内容区域 -->
     <main class="mx-auto max-w-7xl px-4 py-6 pt-20">
