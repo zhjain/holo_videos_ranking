@@ -43,6 +43,7 @@ export type ApiResponse = {
 export const ssr = !dev
 
 export const load: PageLoad = async ({ fetch, url }) => {
+    console.log('load');
     const page = url.searchParams.get('page') || "1"
     const limit = url.searchParams.get('limit') || '20'
     const type = url.searchParams.get('type') || 'all'

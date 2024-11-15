@@ -37,11 +37,11 @@
     // 根据时间范围显示增量标签
     function getTimeRangeLabel(timeRange: string): string {
         const labels = {
-            'daily': '日增量',
-            'weekly': '周增量',
-            'monthly': '月增量',
-            'half-yearly': '半年增量',
-            'yearly': '年增量'
+            'day': '日增量',
+            'week': '周增量',
+            'month': '月增量',
+            'half_year': '半年增量',
+            'year': '年增量'
         }
         return labels[timeRange as keyof typeof labels] || '增量'
     }
@@ -86,7 +86,7 @@
                     <span>•</span>
                     <span>发布于 {formatDate(video.publish_time)}</span>
                     <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                        {getTimeRangeLabel(timeRange)}：{formatViewCount(video.increment_view_count || 0)}
+                        {getTimeRangeLabel(timeRange)}：{formatViewCount(video.view_growth || 0)}
                     </span>
                 </div>
             </div>
