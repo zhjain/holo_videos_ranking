@@ -1,21 +1,26 @@
 <script lang="ts">
     import VideoCard from "$lib/components/videos/VideoCard.svelte"
     import LoadMoreTrigger from "$lib/components/common/LoadMoreTrigger.svelte"
+    import { userStore } from "$lib/stores/userStore"
+
+    $: isAdmin = $userStore?.is_admin
 
     export let data
+
+    // 使用 {#await} 处理异步数据
+    $: videosPromise = data.videos
 </script>
 
-<div class="container mx-auto space-y-6 px-4 py-8">
-    <h1 class="mb-4 text-2xl font-bold">视频列表 (共 {data.pagination.total} 个视频)</h1>
+{#await videosPromise}
+    <div>加载中...</div>
+{:then videoData} 
+    {#each videoData.records as video}
+        <VideoCard {video} {isAdmin} />
+    {/each}
 
-    <div class="space-y-4">
-        {#each data.videos as video, index (video.id)}
-            <VideoCard {video} />
-        {/each}
-    </div>
-
-    <LoadMoreTrigger 
-        loading={false} 
-        hasMore={data.hasMore} 
-    />
-</div>
+    {#if videoData.hasMore}
+        <LoadMoreTrigger loading={false} hasMore={videoData.hasMore} />
+    {/if}
+{:catch error}
+    <div>加载失败: {error.message}</div>
+{/await}

@@ -1,0 +1,63 @@
+name: SvelteKit Project Deployment
+
+# 触发条件：当推送到 main 分支或手动触发
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+# 定义作业
+jobs:
+  deploy:
+    # 运行在最新的 Ubuntu 环境
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - uses: actions/checkout@v3
+
+      # 安装 Bun
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      # 安装依赖
+      - name: Install dependencies
+        run: bun install
+
+      # 运行单元测试（如果有）
+      - name: Run tests
+        run: bun test
+
+      # 构建项目
+      - name: Build project
+        run: bun run build
+
+      # 部署到服务器 - 使用 SSH
+      - name: Deploy to Server
+        env:
+          # 从 GitHub Secrets 获取服务器连接信息
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          # 安装 SSH 客户端
+          sudo apt-get update
+          sudo apt-get install -y openssh-client
+
+          # 配置 SSH
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+
+          # 传输并部署
+          # 先压缩一下
+          tar -czvf build.tar.gz build
+          scp -r -i ~/.ssh/id_rsa ./build.tar.gz $SERVER_USER@$SERVER_HOST:/tmp/my-sveltekit/
+          ssh -i ~/.ssh/id_rsa $SERVER_USER@$SERVER_HOST << EOF
+            # 执行服务器上的部署脚本
+            set -e
+            /tmp/my-sveltekit/deploy_my_sveltekit.sh
+          EOF
