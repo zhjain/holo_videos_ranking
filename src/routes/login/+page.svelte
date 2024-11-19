@@ -36,7 +36,7 @@
             loading = true
 
             // 模拟登录请求
-            const response = await fetch("/api/login", {
+            const response = await fetch("/api/user-logs", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

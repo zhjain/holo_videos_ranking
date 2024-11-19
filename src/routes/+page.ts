@@ -43,49 +43,28 @@ export type ApiResponse = {
 export const ssr = !dev
 
 export const load: PageLoad = async ({ fetch, url }) => {
-    console.log('load');
     const page = url.searchParams.get('page') || "1"
     const limit = url.searchParams.get('limit') || '20'
     const type = url.searchParams.get('type') || 'all'
     const timeRange = url.searchParams.get('timeRange') || 'week'
+    console.log('load rankings', page, limit, type, timeRange);
 
-    try {
-        const response = await fetch(
-            `/api/rankings/videos?_page=${page}&_limit=${limit}&_type=${type}&_timeRange=${timeRange}`
-        )
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch videos')
-        }
-
-        const result: ApiResponse = await response.json()
-
-        if (result.code !== 200) {
-            throw new Error(result.message)
-        }
-
+    const rankingsPromise = fetch(
+        `/api/rankings/videos?_page=${page}&_limit=${limit}&_type=${type}&_timeRange=${timeRange}`
+    ).then(async (response) => {
+        const result = await response.json()
         return {
-            videos: result.data.records,
+            records: result.data.records,
+            hasMore: result.data.current * result.data.size < result.data.total,
             pagination: {
                 current: result.data.current,
-                next: result.data.next,
-                total: result.data.total,
-                size: result.data.size
-            },
-            hasMore: result.data.next > 0
+                size: result.data.size,
+                total: result.data.total
+            }
         }
-    } catch (error) {
-        console.error('Error loading videos:', error)
-        return {
-            videos: [],
-            pagination: {
-                current: 1,
-                next: 0,
-                total: 0,
-                size: 20
-            },
-            hasMore: false,
-            error: 'Failed to load videos'
-        }
+    })
+
+    return {
+        rankings: rankingsPromise
     }
-} 
+}

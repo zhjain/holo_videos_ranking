@@ -1,6 +1,6 @@
 <script lang="ts">
     import { writable } from "svelte/store"
-    import FaTrashAlt from 'svelte-icons/fa/FaTrashAlt.svelte'
+    import FaTrashAlt from "svelte-icons/fa/FaTrashAlt.svelte"
 
     // 添加 clickoutside 动作
     function clickoutside(node: HTMLElement, callback: () => void) {
@@ -10,24 +10,21 @@
             }
         }
 
-        document.addEventListener('click', handleClick, true)
+        document.addEventListener("click", handleClick, true)
 
         return {
             destroy() {
-                document.removeEventListener('click', handleClick, true)
+                document.removeEventListener("click", handleClick, true)
             }
         }
     }
 
-    export let video: any
-    export let isAdmin: boolean = false
-    export let onVideoTypeChange: (videoId: string, type: string) => void = () => {}
-    export let onVideoDelete: (videoId: string) => void = () => {}
+    let { video, isAdmin, onVideoTypeChange = () => {}, onVideoDelete = () => {} } = $props()
 
     const videoTypes = [
-        { value: 'origin', label: '原创歌曲' },
-        { value: 'cover', label: '翻唱歌曲' },
-        { value: 'live', label: '直播片段' }
+        { value: "origin", label: "原创歌曲" },
+        { value: "cover", label: "翻唱歌曲" },
+        { value: "live", label: "直播片段" }
     ]
 
     const dropdownOpen = writable(false)
@@ -87,31 +84,29 @@
     <div class="absolute right-2 top-2 z-10 flex items-center space-x-2">
         {#if isAdmin}
             <!-- 视频类型选择 -->
-            <div 
-                class="relative"
-                use:clickoutside={closeDropdown}
-            >
-                <button 
-                    on:click={toggleDropdown}
-                    class="text-xs rounded bg-gray-100 px-2 py-1 
-                           dark:bg-gray-700 dark:text-gray-300 
-                           hover:bg-gray-200 dark:hover:bg-gray-600"
-                >
+            <div class="relative" use:clickoutside={closeDropdown}>
+                <button
+                    onclick={toggleDropdown}
+                    class="rounded bg-gray-100 px-2 py-1 text-xs
+                           hover:bg-gray-200 dark:bg-gray-700
+                           dark:text-gray-300 dark:hover:bg-gray-600">
                     {getVideoTypeText(video.video_type || "unset")}
                 </button>
 
                 {#if $dropdownOpen}
-                    <ul class="absolute right-0 mt-1 w-auto min-w-[80px] rounded-md 
-                               bg-white shadow-lg border border-gray-200 
-                               dark:bg-gray-700 dark:border-gray-600">
+                    <ul
+                        class="absolute right-0 mt-1 w-auto min-w-[80px] rounded-md
+                               border border-gray-200 bg-white shadow-lg
+                               dark:border-gray-600 dark:bg-gray-700">
                         {#each videoTypes as type}
                             <li>
-                                <button 
-                                    on:click={() => handleVideoTypeChange(type.value)}
-                                    class="w-full text-left px-3 py-2 text-xs 
+                                <button
+                                    onclick={() => handleVideoTypeChange(type.value)}
+                                    class="w-full px-3 py-2 text-left text-xs
                                            hover:bg-gray-100 dark:hover:bg-gray-600
-                                           {video.video_type === type.value ? 'bg-gray-100 dark:bg-gray-600' : ''}"
-                                >
+                                           {video.video_type === type.value
+                                        ? 'bg-gray-100 dark:bg-gray-600'
+                                        : ''}">
                                     {type.label}
                                 </button>
                             </li>
@@ -121,17 +116,16 @@
             </div>
 
             <!-- 删除按钮 -->
-            <button 
-                on:click={handleVideoDelete}
-                class="text-gray-500 hover:text-red-600 w-5 h-5"
-                aria-label="删除视频"
-            >
+            <button
+                onclick={handleVideoDelete}
+                class="h-5 w-5 text-gray-500 hover:text-red-600"
+                aria-label="删除视频">
                 <FaTrashAlt />
             </button>
         {:else}
             <!-- 非管理员只显示视频类型 -->
             <span
-                class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-500 
+                class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-500
                        dark:bg-gray-700 dark:text-gray-400">
                 {getVideoTypeText(video.video_type || "unset")}
             </span>

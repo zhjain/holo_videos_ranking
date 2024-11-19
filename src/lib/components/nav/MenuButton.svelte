@@ -4,7 +4,7 @@
 </script>
 
 <button
-    on:click={toggleMenu}
+    onclick={toggleMenu}
     class="text-gray-600 md:hidden dark:text-gray-300">
     <svg
         class="h-6 w-6"
