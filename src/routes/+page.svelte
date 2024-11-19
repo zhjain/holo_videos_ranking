@@ -2,9 +2,11 @@
     import { goto } from "$app/navigation"
     import VideoRankingCard from "$lib/components/rankings/VideoRankingCard.svelte"
     import LoadMoreTrigger from "$lib/components/common/LoadMoreTrigger.svelte"
+    import { onMount } from "svelte"
 
     // 定义时间范围选项
     const timeRanges = [
+        { label: "全部", value: "all" },
         { label: "日榜", value: "day" },
         { label: "周榜", value: "week" },
         { label: "月榜", value: "month" },
@@ -14,14 +16,25 @@
 
     let { data } = $props()
 
-    const rankingsPromise = $derived(data.rankings)
+    let rankings = $state(data.records)
 
-    let selectedTimeRange = $state(timeRanges[0].value)
+    let selectedTimeRange = $state(timeRanges[5].value)
 
     function changeTimeRange(value: string) {
         selectedTimeRange = value
         goto(`?timeRange=${value}&page=1`)
     }
+    async function loadRankings() {
+        fetch(`/api/rankings/videos?_page=1&_limit=20&_type=all&_timeRange=${selectedTimeRange}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                rankings = data.data.records
+            })
+    }
+    onMount(async () => {
+        await loadRankings()
+    })
 
     function loadMore() {
         console.log("load more")
@@ -43,16 +56,9 @@
     </div>
 
     <!-- 视频列表 -->
-    <div class="space-y-4 min-h-screen">
-        {#await rankingsPromise}
-            <div>加载中...</div>
-        {:then rankingsData}
-            {#each rankingsData.records as video, index (video.id)}
-                <VideoRankingCard {video} rank={index + 1} timeRange={selectedTimeRange} />
-            {/each}
-            {#if rankingsData.hasMore}
-                <LoadMoreTrigger {loadMore} loading={false} hasMore={rankingsData.hasMore} />
-            {/if}
-        {/await}
+    <div class="min-h-screen space-y-4">
+        {#each rankings as video, index}
+            <VideoRankingCard {video} rank={index + 1} timeRange={selectedTimeRange} />
+        {/each}
     </div>
 </div>

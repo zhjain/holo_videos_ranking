@@ -42,29 +42,32 @@ export type ApiResponse = {
 
 export const ssr = !dev
 
-export const load: PageLoad = async ({ fetch, url }) => {
-    const page = url.searchParams.get('page') || "1"
-    const limit = url.searchParams.get('limit') || '20'
-    const type = url.searchParams.get('type') || 'all'
-    const timeRange = url.searchParams.get('timeRange') || 'week'
-    console.log('load rankings', page, limit, type, timeRange);
-
-    const rankingsPromise = fetch(
-        `/api/rankings/videos?_page=${page}&_limit=${limit}&_type=${type}&_timeRange=${timeRange}`
-    ).then(async (response) => {
-        const result = await response.json()
+export const load: PageLoad = async ({ fetch }) => {
+    const isSSR = import.meta.env.SSR; // 检测是否服务端渲染
+    console.log('isSSR', isSSR)
+    if (!isSSR) {
         return {
-            records: result.data.records,
-            hasMore: result.data.current * result.data.size < result.data.total,
+            records: [],
+            hasMore: false,
             pagination: {
-                current: result.data.current,
-                size: result.data.size,
-                total: result.data.total
+                current: 1,
+                size: 20,
+                total: 0
             }
         }
-    })
+    }
+    const response = await fetch(
+        `/api/rankings/videos?_page=1&_limit=20&_type=all&_timeRange=all`
+    )
+    const result = await response.json()
 
     return {
-        rankings: rankingsPromise
+        records: result.data.records,
+        hasMore: result.data.current * result.data.size < result.data.total,
+        pagination: {
+            current: result.data.current,
+            size: result.data.size,
+            total: result.data.total
+        }
     }
 }

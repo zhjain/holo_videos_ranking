@@ -1,7 +1,5 @@
 <script lang="ts">
-    export let video: any // 根据实际类型替换
-    export let rank: number | null = null
-    export let timeRange: string = 'weekly'
+    let { video, rank = null, timeRange = 'week' } = $props()
 
     function formatViewCount(count: number): string {
         if (count >= 10000) {
