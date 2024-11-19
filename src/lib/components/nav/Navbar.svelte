@@ -1,6 +1,6 @@
 <script lang="ts">
     import Headroom from "svelte-headroom"
-    
+
     import NavLogo from "./NavLogo.svelte"
     import NavLinks from "./NavLinks.svelte"
     import NavUserSection from "./NavUserSection.svelte"
@@ -10,18 +10,18 @@
     const toggleMenu = () => (isMenuOpen = !isMenuOpen)
 </script>
 
-<Headroom offset={100}>
-    <nav class="fixed left-0 right-0 top-0 z-50 bg-white/80 shadow-sm backdrop-blur-md dark:bg-gray-900/80">
-        <div class="mx-auto max-w-7xl px-4">
-            <div class="flex h-14 items-center justify-between">
+<nav class="fixed top-0 z-50">
+    <Headroom offset={100}>
+        <div class="bg-white/80 shadow-sm backdrop-blur-md dark:bg-gray-900/80">
+            <div class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
                 <NavLogo />
                 <NavLinks />
                 <NavUserSection {isMenuOpen} {toggleMenu} />
             </div>
         </div>
-    </nav>
-</Headroom>
+    </Headroom>
+</nav>
 
 {#if isMenuOpen}
     <MobileMenu />
-{/if} 
+{/if}

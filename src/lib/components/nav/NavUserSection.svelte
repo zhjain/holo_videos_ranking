@@ -2,16 +2,16 @@
     import GoMarkGithub from "svelte-icons/go/GoMarkGithub.svelte"
     import MenuButton from "./MenuButton.svelte"
 
-    export let isMenuOpen: boolean
-    export let toggleMenu: () => void
+    let { isMenuOpen, toggleMenu } = $props()
 </script>
 
 <div class="flex items-center space-x-4">
     <MenuButton {isMenuOpen} {toggleMenu} />
-    
+
     <!-- 用户头像和GitHub链接 - 桌面端 -->
     <div class="hidden items-center space-x-4 md:flex">
-        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white">
+        <div
+            class="hidden h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white">
             U
         </div>
         <a
@@ -24,4 +24,4 @@
             </div>
         </a>
     </div>
-</div> 
+</div>

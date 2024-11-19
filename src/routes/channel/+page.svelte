@@ -13,7 +13,6 @@
 </script>
 
 <div class="container mx-auto space-y-6 px-4 py-8">
-    <h1 class="mb-4 text-2xl font-bold">频道列表</h1>
     {#await channelsPromise}
         <div>加载中...</div>
     {:then channelData}

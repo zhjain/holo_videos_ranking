@@ -15,20 +15,22 @@
     }
 </script>
 
-{#await videosPromise}
-    <div>加载中...</div>
-{:then videoData}
-    <div class="flex flex-col justify-center gap-4">
-        {#each videoData.records as video}
-            <VideoCard {video} {isAdmin} />
-        {/each}
-    </div>
-
-    {#if videoData.hasMore}
-        <div class="mt-6 flex justify-center">
-            <LoadMoreTrigger loading={false} hasMore={videoData.hasMore} {loadMore} />
+<div class="container mx-auto space-y-6 px-4 py-8">
+    {#await videosPromise}
+        <div>加载中...</div>
+    {:then videoData}
+        <div class="flex flex-col justify-center gap-4">
+            {#each videoData.records as video}
+                <VideoCard {video} {isAdmin} />
+            {/each}
         </div>
-    {/if}
-{:catch error}
-    <div class="text-center text-red-500">加载失败: {error.message}</div>
-{/await}
+
+        {#if videoData.hasMore}
+            <div class="mt-6 flex justify-center">
+                <LoadMoreTrigger loading={false} hasMore={videoData.hasMore} {loadMore} />
+            </div>
+        {/if}
+    {:catch error}
+        <div class="text-center text-red-500">加载失败: {error.message}</div>
+    {/await}
+</div>

@@ -20,7 +20,7 @@
 
     function changeTimeRange(value: string) {
         selectedTimeRange = value
-        goto(`?timeRange=${value}`)
+        goto(`?timeRange=${value}&page=1`)
     }
 
     function loadMore() {
@@ -43,7 +43,7 @@
     </div>
 
     <!-- 视频列表 -->
-    <div class="space-y-4">
+    <div class="space-y-4 min-h-screen">
         {#await rankingsPromise}
             <div>加载中...</div>
         {:then rankingsData}

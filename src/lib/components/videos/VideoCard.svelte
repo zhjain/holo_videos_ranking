@@ -79,7 +79,7 @@
     }
 </script>
 
-<div class="relative overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+<div class="relative z-0 overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
     <!-- 右上角操作区域 -->
     <div class="absolute right-2 top-2 z-10 flex items-center space-x-2">
         {#if isAdmin}
