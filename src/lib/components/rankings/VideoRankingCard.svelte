@@ -39,7 +39,8 @@
             'week': '周增量',
             'month': '月增量',
             'half_year': '半年增量',
-            'year': '年增量'
+            'year': '年增量',
+            'all': '总观看量'
         }
         return labels[timeRange as keyof typeof labels] || '增量'
     }
@@ -94,16 +95,6 @@
                 <span class="text-sm text-gray-700 dark:text-gray-300">
                     {video.owner_channel_title}
                 </span>
-                
-                {#if video.historial_data?.length > 0}
-                    <div class="ml-2 text-xs text-gray-500 dark:text-gray-400">
-                        {#each video.historial_data.slice(-3) as history}
-                            <span class="mr-2">
-                                {formatDate(history.date)}: {formatViewCount(history.video_view_count)}
-                            </span>
-                        {/each}
-                    </div>
-                {/if}
             </div>
         </div>
     </div>
