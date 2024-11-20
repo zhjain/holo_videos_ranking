@@ -74,27 +74,45 @@
         </div>
 
         <!-- 右侧视频信息 -->
-        <div class="flex flex-1 flex-col p-4">
+        <div class="flex flex-1 flex-col gap-2 p-4">
             <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
                 {video.video_title}
             </h3>
-            
-            <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            <div class="flex items-center space-x-4">
                 <div class="flex items-center space-x-2">
-                    <span>{formatViewCount(video.video_view_count)} 次观看</span>
-                    <span>•</span>
-                    <span>发布于 {formatDate(video.publish_time)}</span>
-                    <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                        {getTimeRangeLabel(timeRange)}：{formatViewCount(video.view_growth || 0)}
-                    </span>
+                    <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700">
+                        {#if video.owner_avatar}
+                            <img src={video.owner_avatar} alt={video.owner_channel_title} class="h-full w-full rounded-full object-cover" />
+                        {/if}
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            {video.owner_channel_title}
+                        </span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">
+                            发布于 {formatDate(video.publish_time)}
+                        </span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="flex items-center space-x-2">
-                <div class="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                <span class="text-sm text-gray-700 dark:text-gray-300">
-                    {video.owner_channel_title}
-                </span>
+                <div class="ml-auto flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <span class="text-gray-700 dark:text-gray-300 font-semibold">
+                            {formatViewCount(video.video_view_count)} 次观看
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-blue-100 text-blue-700 rounded-full px-3 py-1 font-bold">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                        <span>
+                            {getTimeRangeLabel(timeRange)}：{formatViewCount(video.view_growth || 0)}
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

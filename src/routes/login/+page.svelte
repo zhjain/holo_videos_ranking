@@ -1,5 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation"
+    import { customFetch } from "$lib/api"
+    import { userStore } from "$lib/stores/userStore"
 
     // 表单状态
     let username = ""
@@ -36,7 +38,7 @@
             loading = true
 
             // 模拟登录请求
-            const response = await fetch("/api/user-logs", {
+            const response = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -44,14 +46,16 @@
                 body: JSON.stringify({ username, password })
             })
 
-            const result = await response.json()
+            const { code, data, message } = await response.json()
 
-            if (result.success) {
+            if (code === 200) {
                 // 登录成功，跳转到首页
-                await goto("/")
+                console.log(data)
+                userStore.login(data.user)
+                // await goto("/")
             } else {
                 // 登录失败，显示错误信息
-                globalError = result.message || "登录失败"
+                globalError = message || "登录失败"
             }
         } catch (error) {
             globalError = "发生未知错误"
@@ -59,9 +63,31 @@
             loading = false
         }
     }
+
+    async function refresh() {
+        const response = await fetch("/api/auth/refresh", {
+            method: "GET"
+        })
+        const { code, data, message } = await response.json()
+        console.log('refresh====>', data, message, code)
+        if (code === 200) {
+            userStore.updateUser(data.user)
+        }
+    }
+
+    async function logout() {
+        const response = await customFetch("/api/auth/logout", {
+            method: "GET"
+        })
+        const { code, message } = await response.json()
+        console.log('logout====>', code, message)
+        if (code === 200) {
+            userStore.logout()
+        }
+    }
 </script>
 
-<div class="flex flex-col items-center justify-center w-full px-8 py-10">
+<div class="flex w-full flex-col items-center justify-center px-8 py-10">
     <div class="mb-8 text-center">
         <h2 class="text-3xl font-extrabold text-gray-900">欢迎回来</h2>
         <p class="mt-2 text-sm text-gray-600">请输入您的账户信息</p>
@@ -129,6 +155,12 @@
             </button>
         </div>
     </form>
+
+    <div>
+        <p>当前用户：{$userStore.username}</p>
+        <button on:click={() => refresh()}>更新用户</button>
+        <button on:click={() => logout()}>退出登录</button>
+    </div>
 
     <div class="mt-6 text-center">
         <a

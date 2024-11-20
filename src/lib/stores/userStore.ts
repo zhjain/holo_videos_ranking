@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store'
+import { browser } from '$app/environment'
 
 export interface User {
     id?: string
@@ -9,14 +10,25 @@ export interface User {
 }
 
 function createUserStore() {
-    const { subscribe, set, update } = writable<User>({})
+    // 从 localStorage 中读取用户数据
+    const storedUser = browser && localStorage.getItem('user')
+        ? JSON.parse(localStorage.getItem('user') as string)
+        : {}
+
+    const { subscribe, set, update } = writable<User>(storedUser)
+
+    // 在数据变化时，将新的用户数据保存到 localStorage 中
+    subscribe((currentUser) => {
+        if (browser) {
+            localStorage.setItem('user', JSON.stringify(currentUser));
+        }
+    })
 
     return {
         subscribe,
         login: (userData: User) => set(userData),
         logout: () => set({}),
-        updateUser: (userData: Partial<User>) => update(currentUser => ({ ...currentUser, ...userData })),
-        isAdmin: (state: User) => !!state.is_admin
+        updateUser: (userData: Partial<User>) => update(currentUser => ({ ...currentUser, ...userData }))
     }
 }
 

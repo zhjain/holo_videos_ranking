@@ -1,25 +1,31 @@
-### 本地打包
+# 视频内容管理平台
 
-#### 打包命令:
+## 项目简介
 
-```bash
-bun run build
-```
+这是一个现代化的视频内容管理平台，提供了频道、视频管理和排行榜功能的全栈 Web 应用。
 
-#### 将打包后的build文件夹压缩成.zip文件
+## 技术栈
 
-### 上传到服务器后
+- **前端框架**: SvelteKit
+- **状态管理**: Svelte Stores
+- **样式**: Tailwind CSS
+- **类型**: TypeScript
+- **部署**: GitHub Actions
 
-#### 删除旧文件夹, 解压并删除压缩包
+## 主要功能
 
-```bash
-rm -r build
-unzip build.zip -d build
-rm build.zip
-```
+### 频道管理
+- 分页展示频道列表
+- 支持异步加载更多频道
+- 响应式布局设计
 
-#### 重启服务:
+### 视频管理
+- 视频卡片展示
+- 管理员特殊权限
+- 动态加载视频列表
 
-```bash
-systemctl restart my-sveltekit
-```
+### 用户认证
+- 登录/注销功能
+- 基于角色的访问控制
+
+## 项目结构
