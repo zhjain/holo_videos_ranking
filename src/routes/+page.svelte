@@ -73,7 +73,16 @@
         console.log("load more")
         loadRankings()
     }
+    // 检查是否是服务端渲染
+    const isSSR = import.meta.env.SSR
+    console.log("当前页面是否为服务端渲染:", isSSR)
 </script>
+
+{#if isSSR}
+    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-200">
+        Hololive 音乐视频排行榜
+    </h1>
+{/if}
 
 <div class="space-y-6">
     <!-- 时间范围选择器 -->
