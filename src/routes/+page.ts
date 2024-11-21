@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types'
 import { dev } from '$app/environment'
 import { customFetch } from '$lib/api'
-
+import type { RequestEvent } from '@sveltejs/kit'
 
 export type HistoricalData = {
     date: string
@@ -41,10 +41,17 @@ export type ApiResponse = {
     }
 }
 
-export const ssr = !dev
+export const ssr = ({ request }: RequestEvent): boolean => {
+    const userAgent = request.headers.get('user-agent') || ''
+
+    // 检查是否为搜索引擎爬虫
+    const isBot = /bot|crawler|spider|crawling/i.test(userAgent)
+
+    return isBot // 搜索引擎触发 SSR，其他情况禁用 SSR
+}
 
 export const load: PageLoad = async ({ fetch }) => {
-    const isSSR = import.meta.env.SSR; // 检测是否服务端渲染
+    const isSSR = import.meta.env.SSR // 检测是否服务端渲染
     console.log('isSSR', isSSR)
     if (!isSSR) {
         return {
@@ -57,8 +64,8 @@ export const load: PageLoad = async ({ fetch }) => {
             }
         }
     }
-    const response = await customFetch(
-        `/api/rankings/videos?_page=1&_limit=20&_type=all&_timeRange=all`
+    const response = await fetch(
+        `/api/rankings/videos?_page=1&_limit=10&_type=all&_timeRange=all`
     )
     const result = await response.json()
 
