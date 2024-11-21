@@ -1,6 +1,7 @@
 <script lang="ts">
     import ChannelCard from "$lib/components/channels/ChannelCard.svelte"
     import LoadMoreTrigger from "$lib/components/common/LoadMoreTrigger.svelte"
+    import Pagination from "$lib/components/common/Pagination.svelte"
 
     let { data } = $props()
 
@@ -22,9 +23,11 @@
             {/each}
         </div>
 
-        {#if channelData.hasMore}
-            <LoadMoreTrigger {loadMore} loading={false} hasMore={channelData.hasMore} />
-        {/if}
+        <Pagination
+            current={channelData.pagination.current}
+            total={channelData.pagination.total}
+            size={channelData.pagination.size}
+            basePath="/channel" />
     {:catch error}
         <div>加载失败: {error.message}</div>
     {/await}
