@@ -21,7 +21,7 @@
             {currentUser.username?.[0]}
         </div>
         <a
-            href="https://github.com"
+            href="https://github.com/zhjain/holo_videos_ranking"
             target="_blank"
             aria-label="github"
             class="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">
