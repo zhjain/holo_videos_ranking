@@ -1,5 +1,6 @@
 import type { PageLoad } from './$types'
 import { dev } from '$app/environment'
+import { customFetch } from '$lib/api'
 
 
 export type HistoricalData = {
@@ -56,7 +57,7 @@ export const load: PageLoad = async ({ fetch }) => {
             }
         }
     }
-    const response = await fetch(
+    const response = await customFetch(
         `/api/rankings/videos?_page=1&_limit=20&_type=all&_timeRange=all`
     )
     const result = await response.json()

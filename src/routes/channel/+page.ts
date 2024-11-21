@@ -1,7 +1,9 @@
 import type { PageLoad } from './$types'
 
-export const load: PageLoad = async ({ fetch }) => {
-    const channelsPromise = fetch('/api/channels?_page=1&_limit=20').then(async (response) => {
+export const load: PageLoad = async ({ fetch, url }) => {
+    const page = url.searchParams.get('page') || 1
+
+    const channelsPromise = fetch(`/api/channels?_page=${page}&_limit=10`).then(async response => {
         const result = await response.json()
         return {
             records: result.data.records,
