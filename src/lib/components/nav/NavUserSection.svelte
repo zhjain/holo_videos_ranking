@@ -7,8 +7,6 @@
 
     let { isMenuOpen, toggleMenu } = $props()
 
-    let currentUser = $userStore; // 自动订阅
-
 </script>
 
 <div class="flex items-center space-x-4">
@@ -18,7 +16,7 @@
     <div class="hidden items-center space-x-4 md:flex">
         <div
             class="h-8 w-8 items-center justify-center rounded-full bg-blue-500 font-bold text-white">
-            {currentUser.username?.[0]}
+            {$userStore.username?.[0]}
         </div>
         <a
             href="https://github.com/zhjain/holo_videos_ranking"

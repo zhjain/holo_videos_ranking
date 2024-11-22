@@ -3,6 +3,7 @@
     import VideoRankingCard from "$lib/components/rankings/VideoRankingCard.svelte"
     import LoadMoreTrigger from "$lib/components/common/LoadMoreTrigger.svelte"
     import { onMount } from "svelte"
+    import { customFetch } from "$lib/api.js"
 
     // 定义时间范围选项
     const timeRanges = [
@@ -28,6 +29,7 @@
     let currentPage = $state(1)
     let loading = $state(false)
     let hasMore = $state(true)
+    let isSSR = $state(true)
 
     let selectedTimeRange = $state(timeRanges[5].value)
     let selectedVideoType = $state(videoTypes[0].value)
@@ -50,10 +52,10 @@
         loading = true
         if (currentPage === 1) rankings = []
         try {
-            const res = await fetch(
+            const { data } = await customFetch<any>(
                 `/api/rankings/videos?_page=${currentPage}&_limit=20&_type=${selectedVideoType}&_timeRange=${selectedTimeRange}`
             )
-            const { data } = await res.json()
+            // const { data } = await res.json()
             console.log(data)
             rankings = [...rankings, ...data.records]
         } catch (error) {
@@ -64,7 +66,10 @@
     }
 
     onMount(async () => {
-        await loadRankings()
+        // await loadRankings()
+        // rankings = data.records
+        isSSR = false
+        console.log("页面加载完成")
     })
 
     function loadMore() {
@@ -73,18 +78,16 @@
         console.log("load more")
         loadRankings()
     }
-    // 检查是否是服务端渲染
-    const isSSR = import.meta.env.SSR
-    console.log("当前页面是否为服务端渲染:", isSSR)
 </script>
 
 {#if isSSR}
-    <h1 class="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-gray-200">
+    <h1 class="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-gray-200">
         Hololive 音乐视频排行榜
     </h1>
 {/if}
 
 <div class="space-y-6">
+    {isSSR}
     <!-- 时间范围选择器 -->
     <div class="mb-6 flex justify-center space-x-4">
         {#each timeRanges as range}
