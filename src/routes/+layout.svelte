@@ -32,6 +32,10 @@
         <Navbar />
     {/if}
 
+    <h1 class="absolute left-0 top-0 -z-10 mb-6 text-center text-gray-800 dark:text-gray-200">
+        Hololive 音乐视频排行榜
+    </h1>
+
     <!-- 主要内容区域 -->
     <main class="mx-auto max-w-7xl px-4 py-6 pt-20">
         {@render children()}

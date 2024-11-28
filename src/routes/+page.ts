@@ -51,21 +51,8 @@ export const ssr = ({ request }: RequestEvent): boolean => {
 }
 
 export const load: PageLoad = async ({ fetch }) => {
-    const isSSR = import.meta.env.SSR // 检测是否服务端渲染
-    console.log('isSSR', isSSR)
-    if (!isSSR) {
-        return {
-            records: [],
-            hasMore: false,
-            pagination: {
-                current: 1,
-                size: 20,
-                total: 0
-            }
-        }
-    }
     const response = await fetch(
-        `/api/rankings/videos?_page=1&_limit=10&_type=all&_timeRange=all`
+        `/api/rankings/videos?_page=1&_limit=20&_type=all&_timeRange=all`
     )
     const result = await response.json()
 

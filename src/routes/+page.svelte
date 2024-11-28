@@ -80,14 +80,8 @@
     }
 </script>
 
-{#if isSSR}
-    <h1 class="mb-6 text-center text-2xl font-bold text-gray-800 dark:text-gray-200">
-        Hololive 音乐视频排行榜
-    </h1>
-{/if}
 
 <div class="space-y-6">
-    {isSSR}
     <!-- 时间范围选择器 -->
     <div class="mb-6 flex justify-center space-x-4">
         {#each timeRanges as range}
