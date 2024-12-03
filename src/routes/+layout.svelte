@@ -31,8 +31,8 @@
     {#if $page.route.id !== "/login"}
         <Navbar />
     {/if}
-
-    <h1 class="absolute left-0 top-0 -z-10 mb-6 text-center text-gray-800 dark:text-gray-200">
+<!-- svelte-ignore a11y_hidden -->
+    <h1 aria-hidden="true" class="absolute left-0 top-0 mb-6 text-center text-gray-800 dark:text-gray-200">
         Hololive 音乐视频排行榜
     </h1>
 
