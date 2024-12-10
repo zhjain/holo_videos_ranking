@@ -1,6 +1,8 @@
 <script lang="ts">
     import { writable } from "svelte/store"
     import FaTrashAlt from "svelte-icons/fa/FaTrashAlt.svelte"
+    import toast, { Toaster } from "svelte-french-toast"
+    import { customFetch } from "$lib/api"
 
     // 添加 clickoutside 动作
     function clickoutside(node: HTMLElement, callback: () => void) {
@@ -19,7 +21,8 @@
         }
     }
 
-    let { video, isAdmin, onVideoTypeChange = () => {}, onVideoDelete = () => {} } = $props()
+    let { video, isAdmin } = $props()
+
     let videoType = $state(video.video_type)
     const videoTypes = [
         { value: "origin", label: "原创歌曲" },
@@ -64,10 +67,44 @@
         return typeMap[videoType] || typeMap["unset"]
     })
 
+    async function onVideoTypeChange(videoId: string, type: string) {
+        console.log("onVideoTypeChange", videoId, type)
+        try {
+            const { code, message } = await customFetch(
+                `/api/videos/${videoId}`,
+                {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        video_type: type
+                    })
+                },
+                true
+            )
+            if (code === 200) {
+                return true
+            } else if (code === 401) {
+                // 处理 token 验证失败的情况
+                toast.error("Token验证失败，请重新登录")
+                return false
+            } else {
+                toast.error(`请求失败：${message}`)
+                return false
+            }
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                toast.error(error.message)
+            } else {
+                toast.error("网络请求错误")
+            }
+            return false
+        }
+    }
+
     async function handleVideoTypeChange(type: string) {
         const success = await onVideoTypeChange(video.id, type)
         if (success) {
             videoType = type
+            toast.success("视频类型已更新")
         }
         dropdownOpen.set(false)
     }
@@ -76,6 +113,7 @@
         const success = await onVideoTypeChange(video.id, "deleted")
         if (success) {
             videoType = "deleted"
+            toast.success("视频已删除")
         }
     }
 
@@ -143,7 +181,7 @@
 
     <div class="flex flex-col md:flex-row">
         <!-- 左侧视频缩略图 -->
-        <div class="relative md:w-80 md:h-44">
+        <div class="relative md:h-44 md:w-80">
             <div class="aspect-video">
                 <img
                     src={video.video_pic}
@@ -178,3 +216,4 @@
         </div>
     </div>
 </div>
+<Toaster />
