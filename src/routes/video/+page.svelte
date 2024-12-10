@@ -6,7 +6,7 @@
     import { goto } from "$app/navigation"
     import Pagination from "$lib/components/common/Pagination.svelte"
     import Modal from "$lib/components/common/Modal.svelte"
-
+    import toast from "svelte-french-toast"
     let showModal = $state(false)
 
     const isAdmin = $derived($userStore?.isAdmin)
@@ -15,14 +15,31 @@
 
     const videosPromise = $derived(data.videos)
 
-    let videoLink = $state("")
+    let videoId = $state("")
+
+    let videoInfo = $state({})
 
     async function handleAddVideo() {
-        if (videoLink.trim()) {
-            console.log("添加视频:", videoLink)
-            const res = await customFetch('')
-            videoLink = ""
-            showModal = false
+        if (videoId.trim()) {
+            console.log("添加视频:", videoId)
+            try {
+                const res = await customFetch(
+                    `/api/videos/utb/${videoId}`,
+                    {
+                        method: "GET"
+                    },
+                    true
+                )
+                if (res.code === 200) {
+                    videoInfo = res.data as any
+                } else {
+                    toast.error(res.message)
+                }
+                videoId = ""
+                showModal = false
+            } catch (error) {
+                toast.error("视频添加失败")
+            }
         }
     }
 </script>
@@ -77,7 +94,7 @@
                         视频链接
                         <input
                             type="text"
-                            bind:value={videoLink}
+                            bind:value={videoId}
                             class="w-full rounded-md border p-2"
                             placeholder="请输入视频id或链接" />
                     </label>

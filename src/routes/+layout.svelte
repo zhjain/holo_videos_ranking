@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { Toaster } from "svelte-french-toast"
     import { page } from "$app/stores"
     import Navbar from "$lib/components/nav/Navbar.svelte"
     import "../app.css"
@@ -41,3 +42,5 @@
         {@render children()}
     </main>
 </div>
+
+<Toaster />

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { writable } from "svelte/store"
     import FaTrashAlt from "svelte-icons/fa/FaTrashAlt.svelte"
-    import toast, { Toaster } from "svelte-french-toast"
+    import toast from "svelte-french-toast"
     import { customFetch } from "$lib/api"
 
     // 添加 clickoutside 动作
@@ -216,4 +216,3 @@
         </div>
     </div>
 </div>
-<Toaster />
