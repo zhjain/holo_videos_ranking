@@ -1,7 +1,6 @@
 import { get } from 'svelte/store'
 import { authStore } from '$lib/stores/authStore'
 import { userStore } from './stores/userStore';
-
 let refreshTokenPromise: Promise<void> | null = null;
 
 export async function customFetch<T>(
@@ -10,29 +9,26 @@ export async function customFetch<T>(
     needToken = false
 ): Promise<{ code: number; message: string; data: T }> {
     // 添加公共请求头，例如 Authorization
-    // const token = authStore.subscribe(token => token)
-    const auth = get(authStore)
 
     if (!authStore.isTokenValid()) {
         if (refreshTokenPromise === null) {
             refreshTokenPromise = refreshToken();
         }
 
-        try {
-            await refreshTokenPromise;
-        } catch (error) {
-            // 如果令牌刷新失败，且需要令牌，则抛出错误
-            if (needToken) {
+        if (needToken) {
+            try {
+                await refreshTokenPromise;
+            } catch (error) {
                 authStore.logout()
                 userStore.logout()
                 throw new Error('Token验证失败，请重新登录');
+            } finally {
+                refreshTokenPromise = null;
             }
-        } finally {
-            refreshTokenPromise = null;
         }
     }
     const headers: HeadersInit = {
-        Authorization: `Bearer ${auth.token}`,
+        Authorization: `Bearer ${get(authStore).token}`,
         'Content-Type': 'application/json',
         ...options.headers
     }

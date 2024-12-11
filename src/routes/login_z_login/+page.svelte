@@ -1,6 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation"
     import { customFetch } from "$lib/api"
+    import { authStore } from "$lib/stores/authStore"
     import { userStore } from "$lib/stores/userStore"
 
     // 表单状态
@@ -52,7 +53,7 @@
             if (code === 200) {
                 // 登录成功，跳转到首页
                 userStore.login(data.user)
-
+                authStore.login(data.token, 30 * 60)
                 // 如果选择记住用户，将用户名保存到本地存储
                 if (rememberMe) {
                     localStorage.setItem("rememberedUsername", username)
@@ -102,6 +103,7 @@
         )
         if (code === 200) {
             userStore.logout()
+            authStore.logout()
         }
     }
 </script>

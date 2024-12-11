@@ -17,7 +17,7 @@
 
     let videoId = $state("")
 
-    let videoInfo = $state({})
+    let videoInfo = $state({} as any)
 
     async function handleAddVideo() {
         if (videoId.trim()) {
@@ -35,8 +35,8 @@
                 } else {
                     toast.error(res.message)
                 }
-                videoId = ""
-                showModal = false
+                // videoId = ""
+                // showModal = false
             } catch (error) {
                 toast.error("视频添加失败")
             }
@@ -114,6 +114,12 @@
                         确认
                     </button>
                 </div>
+                {#if videoInfo}
+                    <div>
+                        <img src={videoInfo.video_pic} alt={videoInfo.video_title} />
+                        <h3>{videoInfo.video_title}</h3>
+                    </div>
+                {/if}
             </div>
         </div>
     </Modal>
