@@ -10,6 +10,8 @@
 
     function formatDate(dateString: string): string {
         const date = new Date(dateString)
+        console.log(date);
+        console.log(dateString);
         return date.toLocaleDateString('zh-CN', {
             year: 'numeric',
             month: 'long',
@@ -38,7 +40,7 @@
                 <div class="text-sm text-gray-500 dark:text-gray-400">
                     <span>{formatSubscriberCount(channel.channel_subscriber_count)} 订阅者</span>
                     <span class="ml-2">•</span>
-                    <span class="ml-2">创建于 {formatDate(channel.channel_create_time)}</span>
+                    <span class="ml-2">创建于 {formatDate(channel.channel_created_time)}</span>
                 </div>
             </div>
         </div>
