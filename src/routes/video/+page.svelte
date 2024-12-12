@@ -19,6 +19,8 @@
 
     let videoInfo = $state({} as any)
 
+    const videoInfoIsNull = $derived(Object.keys(videoInfo).length === 0)
+
     async function handleAddVideo() {
         if (videoId.trim()) {
             console.log("添加视频:", videoId)
@@ -38,13 +40,36 @@
                 // videoId = ""
                 // showModal = false
             } catch (error) {
-                toast.error("视频添加失败")
+                toast.error("视频获取失败")
             }
+        }
+    }
+
+    async function handleSaveVideo() {
+        try {
+            const res = await customFetch(
+                `/api/videos`,
+                {
+                    method: "POST",
+                    body: JSON.stringify(videoInfo)
+                },
+                true
+            )
+            if (res.code === 200) {
+                toast.success("视频保存成功")
+                showModal = false
+                videoId = ""
+                videoInfo = {}
+            } else {
+                toast.error(res.message)
+            }
+        } catch (error) {
+            toast.error("视频保存失败")
         }
     }
 </script>
 
-<div class="container mx-auto space-y-6 px-4 py-8">
+<div class="container mx-auto px-4 py-8">
     {#if isAdmin}
         <div class="mb-4 flex justify-end">
             <button
@@ -100,24 +125,45 @@
                     </label>
                 </div>
 
-                <div class="flex justify-end space-x-2">
-                    <button
-                        class="rounded-md bg-gray-200 px-4 py-2 text-gray-700"
-                        onclick={() => {
-                            showModal = false
-                        }}>
-                        取消
-                    </button>
-                    <button
-                        class="rounded-md bg-green-500 px-4 py-2 text-white"
-                        onclick={handleAddVideo}>
-                        确认
-                    </button>
-                </div>
-                {#if videoInfo}
-                    <div>
-                        <img src={videoInfo.video_pic} alt={videoInfo.video_title} />
-                        <h3>{videoInfo.video_title}</h3>
+                {#if videoInfoIsNull}
+                    <div class="flex justify-end space-x-2">
+                        <button
+                            class="rounded-md bg-gray-200 px-4 py-2 text-gray-700"
+                            onclick={() => {
+                                showModal = false
+                            }}>
+                            取消
+                        </button>
+                        <button
+                            class="rounded-md bg-green-500 px-4 py-2 text-white"
+                            onclick={handleAddVideo}>
+                            确认
+                        </button>
+                    </div>
+                {:else}
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <img
+                                src={videoInfo.video_pic}
+                                alt={videoInfo.video_title}
+                                class="h-16 w-24 rounded-md object-cover" />
+                            <h3 class="font-semibold">{videoInfo.video_title}</h3>
+                        </div>
+
+                        <div class="flex justify-end space-x-2">
+                            <button
+                                class="rounded-md bg-gray-200 px-4 py-2 text-gray-700"
+                                onclick={() => {
+                                    showModal = false
+                                }}>
+                                取消
+                            </button>
+                            <button
+                                class="rounded-md bg-green-500 px-4 py-2 text-white"
+                                onclick={handleSaveVideo}>
+                                保存到数据库
+                            </button>
+                        </div>
                     </div>
                 {/if}
             </div>

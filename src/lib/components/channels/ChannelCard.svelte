@@ -22,8 +22,13 @@
     <div class="p-4">
         <div class="flex items-center space-x-4">
             <img 
-                src={channel.channel_avatar} 
+                src={channel.channel_cdn_avatar} 
                 alt={channel.channel_title} 
+                onerror={(e) => {
+                    if (e.target instanceof HTMLImageElement) {
+                        e.target.src = channel.channel_cdn_avatar_backup
+                    }
+                }}
                 class="w-16 h-16 rounded-full object-cover"
             />
             <div class="flex-1">
