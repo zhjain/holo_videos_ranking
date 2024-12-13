@@ -25,17 +25,12 @@
         <div class="flex items-center space-x-4">
             <img 
                 src={channel.channel_cdn_avatar} 
-                alt={channel.channel_title} 
-                onerror={(e) => {
-                    if (e.target instanceof HTMLImageElement) {
-                        e.target.src = channel.channel_cdn_avatar_backup
-                    }
-                }}
+                alt={channel.channel_name} 
                 class="w-16 h-16 rounded-full object-cover"
             />
             <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    {channel.channel_title}
+                    {channel.channel_name}
                 </h3>
                 <div class="text-sm text-gray-500 dark:text-gray-400">
                     <span>{formatSubscriberCount(channel.channel_subscriber_count)} 订阅者</span>
@@ -46,7 +41,11 @@
         </div>
         
         <div class="mt-4 text-sm text-gray-600 dark:text-gray-300">
-            {channel.channel_description || '暂无描述'}
+            {channel.channel_description ? 
+                (channel.channel_description.length > 100 ? 
+                    channel.channel_description.slice(0, 100) + '...' : 
+                    channel.channel_description) : 
+                '暂无描述'}
         </div>
     </div>
 </div> 

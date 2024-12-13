@@ -63,7 +63,7 @@
         <div class="relative md:w-80">
             <div class="aspect-video">
                 <img
-                    src={video.video_pic}
+                    src={video.video_cdn_pic}
                     alt={video.video_title}
                     class="h-full w-full object-cover"
                 />
@@ -81,8 +81,8 @@
             <div class="flex items-center space-x-4">
                 <div class="flex items-center space-x-2">
                     <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700">
-                        {#if video.owner_avatar}
-                            <img src={video.owner_avatar} alt={video.owner_channel_title} class="h-full w-full rounded-full object-cover" />
+                        {#if video.owner_channel_avatar}
+                            <img src={video.owner_channel_avatar} alt={video.owner_channel_title} class="h-full w-full rounded-full object-cover" />
                         {/if}
                     </div>
                     <div class="flex flex-col">

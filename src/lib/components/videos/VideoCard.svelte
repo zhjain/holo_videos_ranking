@@ -186,11 +186,6 @@
                 <img
                     src={video.video_cdn_pic}
                     alt={video.video_title}
-                    onerror={(e) => {
-                        if (e.target instanceof HTMLImageElement) {
-                            e.target.src = video.video_cdn_pic_backup
-                        }
-                    }}
                     class="h-full w-full object-cover" />
                 <div class="absolute bottom-2 right-2 rounded bg-black/80 px-1 text-xs text-white">
                     {formatDuration(video.parsed_duration)}
