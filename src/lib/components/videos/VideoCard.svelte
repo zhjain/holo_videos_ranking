@@ -183,10 +183,15 @@
         <!-- 左侧视频缩略图 -->
         <div class="relative md:h-44 md:w-80">
             <div class="aspect-video">
-                <img
-                    src={video.video_cdn_pic}
-                    alt={video.video_title}
-                    class="h-full w-full object-cover" />
+                <a
+                    href={`https://www.youtube.com/watch?v=${video.video_id}`}
+                    target="_blank"
+                    aria-label={`跳转到${video.video_title}源视频`}>
+                    <img
+                        src={video.video_cdn_pic}
+                        alt={video.video_title}
+                        class="h-full w-full object-cover" />
+                </a>
                 <div class="absolute bottom-2 right-2 rounded bg-black/80 px-1 text-xs text-white">
                     {formatDuration(video.parsed_duration)}
                 </div>

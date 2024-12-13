@@ -62,11 +62,14 @@
         <!-- 左侧视频缩略图 -->
         <div class="relative md:w-80">
             <div class="aspect-video">
-                <img
-                    src={video.video_cdn_pic}
-                    alt={video.video_title}
-                    class="h-full w-full object-cover"
-                />
+                <a
+                    href={`https://www.youtube.com/watch?v=${video.video_id}`}
+                    target="_blank"
+                    aria-label={`跳转到${video.video_title}源视频`}>
+                    <img src={video.video_cdn_pic}
+                        alt={video.video_title}
+                        class="h-full w-full object-cover" />
+                </a>
                 <div class="absolute bottom-2 right-2 rounded bg-black/80 px-1 text-xs text-white">
                     {formatDuration(video.parsed_duration)}
                 </div>
@@ -74,7 +77,7 @@
         </div>
 
         <!-- 右侧视频信息 -->
-        <div class="flex flex-1 flex-col gap-2 p-4">
+        <div class="flex flex-1 flex-col gap-2 ">
             <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
                 {video.video_title}
             </h3>
