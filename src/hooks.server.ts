@@ -4,7 +4,7 @@ import { dev } from '$app/environment';
 
 export const handle: Handle = async ({ event, resolve }) => {
     // 处理 API 请求
-    if (event.url.pathname.startsWith('/api')) {
+    if (dev && event.url.pathname.startsWith('/api')) {
         const targetUrl = new URL(
             event.url.pathname + event.url.search,
             API_BASE_URL
