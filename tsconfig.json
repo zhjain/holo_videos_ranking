@@ -14,7 +14,8 @@
     "include": [
         "src/**/*", // 默认会包含 src 目录
         "types/**/*", // 显式地包含 types 目录
-        "node_modules/**/*"
+        "node_modules/**/*",
+        ".svelte-kit/ambient.d.ts"
     ],
     // Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
     // except $lib which is handled by https://svelte.dev/docs/kit/configuration#files

@@ -32,6 +32,8 @@ jobs:
 
       # 构建项目
       - name: Build project
+        env:
+          PUBLIC_GA_ID: ${{ secrets.PUBLIC_GA_ID }}
         run: bun run build
 
       # 部署到服务器 - 使用 SSH
@@ -41,6 +43,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
+
         run: |
           # 安装 SSH 客户端
           sudo apt-get update
