@@ -68,6 +68,9 @@
                     aria-label={`跳转到${video.video_title}源视频`}>
                     <img src={video.video_cdn_pic}
                         alt={video.video_title}
+                        loading="lazy"
+                        width={320}
+                        height={180}
                         class="h-full w-full object-cover" />
                 </a>
                 <div class="absolute bottom-2 right-2 rounded bg-black/80 px-1 text-xs text-white">
@@ -77,15 +80,15 @@
         </div>
 
         <!-- 右侧视频信息 -->
-        <div class="flex flex-1 flex-col gap-2 ">
-            <h3 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+        <div class="flex flex-1 flex-col gap-2 p-4">
+            <h3 class="text-lg md:text-xl font-semibold text-gray-900 dark:text-white line-clamp-2">
                 {video.video_title}
             </h3>
-            <div class="flex items-center space-x-4">
+            <div class="flex flex-col md:flex-row md:items-center gap-4 md:space-x-4">
                 <div class="flex items-center space-x-2">
                     <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700">
                         {#if video.owner_channel_avatar}
-                            <img src={video.owner_channel_avatar} alt={video.owner_channel_title} class="h-full w-full rounded-full object-cover" />
+                            <img src={video.owner_channel_avatar} alt={video.owner_channel_title} loading="lazy" class="h-full w-full rounded-full object-cover" />
                         {/if}
                     </div>
                     <div class="flex flex-col">
@@ -97,7 +100,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="ml-auto flex items-center space-x-4">
+                <div class="flex flex-wrap gap-2 md:ml-auto">
                     <div class="flex items-center space-x-2 bg-gray-100 rounded-full px-3 py-1">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

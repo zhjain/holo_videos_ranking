@@ -190,6 +190,9 @@
                     <img
                         src={video.video_cdn_pic}
                         alt={video.video_title}
+                        loading="lazy"
+                        width={320}
+                        height={180}
                         class="h-full w-full object-cover" />
                 </a>
                 <div class="absolute bottom-2 right-2 rounded bg-black/80 px-1 text-xs text-white">
