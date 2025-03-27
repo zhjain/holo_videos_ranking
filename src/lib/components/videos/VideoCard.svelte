@@ -101,7 +101,7 @@
     }
 
     async function handleVideoTypeChange(type: string) {
-        const success = await onVideoTypeChange(video.id, type)
+        const success = await onVideoTypeChange(video.video_id, type)
         if (success) {
             videoType = type
             toast.success("视频类型已更新")
@@ -110,7 +110,7 @@
     }
 
     async function handleVideoDelete() {
-        const success = await onVideoTypeChange(video.id, "deleted")
+        const success = await onVideoTypeChange(video.video_id, "deleted")
         if (success) {
             videoType = "deleted"
             toast.success("视频已删除")

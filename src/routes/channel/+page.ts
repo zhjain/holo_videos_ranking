@@ -4,7 +4,7 @@ export const load: PageLoad = async ({ fetch, url }) => {
     const page = url.searchParams.get('page') || 1
     const search = url.searchParams.get('q') || ''
 
-    const channelsPromise = fetch(`/api/channels?_page=${page}&_limit=12&q=${search}`).then(async response => {
+    const channelsPromise = fetch(`/api/channels?page=${page}&size=12&q=${search}`).then(async response => {
         const result = await response.json()
         return {
             records: result.data.records,

@@ -15,7 +15,6 @@
     })
 
     const channelsPromise = $derived(data.channels)
-    // console.log(channelsPromise);
 
     function loadMore() {
         console.log("load more")

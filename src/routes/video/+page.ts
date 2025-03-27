@@ -5,7 +5,7 @@ export const load: PageLoad = async ({ fetch, url }) => {
     const type = url.searchParams.get('type') || ''
 
     // 返回一个 Promise，用于异步加载视频数据
-    const videosPromise = fetch(`/api/videos?_page=${page}&_limit=10&_type=${type}&_sort=publish_time&_order=desc`).then(async response => {
+    const videosPromise = fetch(`/api/videos?num=${page}&size=10&type=${type}&sort=publish_time&order=desc`).then(async response => {
         const result = await response.json()
         return {
             records: result.data.records,

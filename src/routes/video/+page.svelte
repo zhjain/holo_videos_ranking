@@ -26,7 +26,7 @@
             console.log("添加视频:", videoId)
             try {
                 const res = await customFetch(
-                    `/api/videos/utb/${videoId}`,
+                    `/api/youtube/video/${videoId}`,
                     {
                         method: "GET"
                     },

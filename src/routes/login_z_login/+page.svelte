@@ -53,7 +53,7 @@
             if (code === 200) {
                 // 登录成功，跳转到首页
                 userStore.login(data.user)
-                authStore.login(data.token, 30 * 60)
+                authStore.login(data.token, 15 * 60)
                 // 如果选择记住用户，将用户名保存到本地存储
                 if (rememberMe) {
                     localStorage.setItem("rememberedUsername", username)
@@ -61,7 +61,7 @@
                     localStorage.removeItem("rememberedUsername")
                 }
 
-                await goto("/")
+                await goto("/video")
             } else {
                 // 登录失败，显示错误信息
                 globalError = message || "登录失败"
