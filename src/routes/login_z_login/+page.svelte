@@ -90,6 +90,7 @@
         console.log("refresh====>", data, message, code)
         if (code === 200) {
             userStore.updateUser(data.user)
+            authStore.refresh(data.token, 15 * 60)
         }
     }
 

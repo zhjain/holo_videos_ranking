@@ -51,7 +51,7 @@ async function refreshToken(): Promise<void> {
         const { code, data } = await response.json();
 
         if (code === 200) {
-            authStore.login(data.token, 30 * 60);
+            authStore.refresh(data.token, 1 * 60);
         } else {
             throw new Error('令牌刷新失败');
         }
