@@ -53,7 +53,7 @@
         if (currentPage === 1) rankings = []
         try {
             const { data } = await customFetch<any>(
-                `/api/rankings/videos?_page=${currentPage}&_limit=20&_type=${selectedVideoType}&_timeRange=${selectedTimeRange}`
+                `/api/rankings/videos?page=${currentPage}&limit=20&type=${selectedVideoType}&timeRange=${selectedTimeRange}`
             )
             // const { data } = await res.json()
             console.log(data)

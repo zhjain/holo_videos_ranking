@@ -27,6 +27,7 @@ export async function customFetch<T>(
             }
         }
     }
+    // TODO 这里有问题, 如果token不存在的话会传`Bearer `, 应该改成不传Authorization
     const headers: HeadersInit = {
         Authorization: `Bearer ${get(authStore).token}`,
         'Content-Type': 'application/json',
