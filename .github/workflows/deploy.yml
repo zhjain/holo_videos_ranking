@@ -1,4 +1,4 @@
-name: SvelteKit Project Deployment
+name: Build on GitHub, Deploy to Server (SvelteKit)
 
 # 触发条件：当推送到 main 分支或手动触发
 on:
@@ -6,62 +6,87 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
-# 定义作业
 jobs:
-  deploy:
-    # 运行在最新的 Ubuntu 环境
-    runs-on: ubuntu-latest
+  # ----------------------------------------------------
+  # 作业 1: 在 GitHub 云端服务器上构建项目
+  # ----------------------------------------------------
+  build:
+    name: Build SvelteKit Project
+    runs-on: ubuntu-latest # 使用 GitHub 官方的云端 Runner
 
     steps:
-      # 检出代码
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # 安装 Bun
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
 
-      # 安装依赖
       - name: Install dependencies
-        run: bun install
+        run: bun install --frozen-lockfile # 使用 --frozen-lockfile 保证依赖一致性
 
-      # 运行单元测试（如果有）
-      - name: Run tests
+      - name: Run tests (if any)
         run: bun test
 
-      # 构建项目
       - name: Build project
         env:
+          # 构建时需要的环境变量，从 Secrets 获取
           PUBLIC_GA_ID: ${{ secrets.PUBLIC_GA_ID }}
           VITE_API_BASE_URL: https://startend.xyz
         run: bun run build
 
-      # 部署到服务器 - 使用 SSH
-      - name: Deploy to Server
-        env:
-          # 从 GitHub Secrets 获取服务器连接信息
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
+      - name: Archive production artifacts
+        # 将构建产物（build 目录）打包成一个文件，方便传输
+        run: tar -czvf build.tar.gz build
 
+      - name: Upload artifact for deployment job
+        # 上传构建产物，以便下一个 Job 可以下载
+        uses: actions/upload-artifact@v4
+        with:
+          name: sveltekit-build # 为产物命名
+          path: build.tar.gz   # 指定要上传的文件
+
+  # ----------------------------------------------------
+  # 作业 2: 在你的自托管服务器上部署
+  # ----------------------------------------------------
+  deploy:
+    name: Deploy to Server
+    needs: build # 关键：确保这个 Job 在 build Job 成功后才运行
+    runs-on: self-hosted # 关键：指定运行在你自己的服务器上
+
+    steps:
+      - name: Download artifact from build job
+        # 下载 build Job 上传的构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: sveltekit-build # 使用与上传时相同的名字
+
+      - name: Deploy to application directory
         run: |
-          # 安装 SSH 客户端
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
+          set -e # 如果任何命令失败，则立即退出脚本
 
-          # 配置 SSH
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+          echo "Unpacking artifact..."
+          tar -xzvf build.tar.gz
 
-          # 传输并部署
-          # 先压缩一下
-          tar -czvf build.tar.gz build
-          scp -r -i ~/.ssh/id_rsa ./build.tar.gz $SERVER_USER@$SERVER_HOST:/tmp/my-sveltekit/
-          ssh -i ~/.ssh/id_rsa $SERVER_USER@$SERVER_HOST << EOF
-            # 执行服务器上的部署脚本
-            set -e
-            /tmp/my-sveltekit/deploy_my_sveltekit.sh
-          EOF
+          # 定义你的应用部署目录
+          DEPLOY_PATH="/var/www/my-sveltekit"
+
+          echo "Syncing files to ${DEPLOY_PATH}..."
+          # 使用 rsync 可以高效地同步文件，并删除目标目录中多余的旧文件
+          # 注意：源路径最后的 / 很重要
+          rsync -av --delete ./build/ "${DEPLOY_PATH}/"
+
+          cd "${DEPLOY_PATH}"
+
+          echo "---- Installing production dependencies explicitly ----"
+
+          bun install --production --verbose
+
+          echo "Restarting application..."
+
+          sudo systemctl restart my-sveltekit.service
+
+
+
+          echo "Deployment successful!"
