@@ -1,11 +1,12 @@
 import type { Handle } from '@sveltejs/kit'
 import { dev } from '$app/environment';
 
-import { PUBLIC_GA_ID } from '$env/static/public';
+import { PUBLIC_GA_ID, PUBLIC_CLARITY_ID } from '$env/static/public';
 import { VITE_API_BASE_URL } from '$env/static/private';
 
 export const API_BASE_URL = VITE_API_BASE_URL
 export const GA_ID = PUBLIC_GA_ID || ''
+export const CLARITY_ID = PUBLIC_CLARITY_ID || ''
 
 export const handle: Handle = async ({ event, resolve }) => {
     // 处理 API 请求
@@ -48,6 +49,13 @@ export const handle: Handle = async ({ event, resolve }) => {
                 gtag('js', new Date());
 
                 gtag('config', '${GA_ID}', { 'page_path': '${page}' });
+              </script>
+              <script type="text/javascript">
+                 (function(c,l,a,r,i,t,y){
+                   c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                   t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                   y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                 })(window, document, "clarity", "script", "${CLARITY_ID}");
               </script>
             `
         );
