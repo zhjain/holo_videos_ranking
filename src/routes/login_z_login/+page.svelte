@@ -61,7 +61,7 @@
                     localStorage.removeItem("rememberedUsername")
                 }
 
-                await goto("/video")
+                await goto("/")
             } else {
                 // 登录失败，显示错误信息
                 globalError = message || "登录失败"
