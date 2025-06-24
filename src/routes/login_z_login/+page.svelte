@@ -53,7 +53,7 @@
             if (code === 200) {
                 // 登录成功，跳转到首页
                 userStore.login(data.user)
-                authStore.login(data.token, 15 * 60)
+                authStore.login({ token: data.token, expires: 15 * 60 })
                 // 如果选择记住用户，将用户名保存到本地存储
                 if (rememberMe) {
                     localStorage.setItem("rememberedUsername", username)
@@ -90,7 +90,7 @@
         console.log("refresh====>", data, message, code)
         if (code === 200) {
             userStore.updateUser(data.user)
-            authStore.refresh(data.token, 15 * 60)
+            authStore.refresh({ token: data.token, expires: 15 * 60 })
         }
     }
 

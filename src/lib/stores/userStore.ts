@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { writable, get } from 'svelte/store'
 import { browser } from '$app/environment'
 
 export interface User {
@@ -7,30 +7,38 @@ export interface User {
     email?: string
     isAdmin?: boolean
     avatar?: string
+    permissions?: string[]
 }
 
+const defaultUser: User = {}
+
 function createUserStore() {
-    // 从 localStorage 中读取用户数据
     const storedUser =
         browser && localStorage.getItem('user')
             ? JSON.parse(localStorage.getItem('user') as string)
-            : {}
+            : defaultUser
 
     const { subscribe, set, update } = writable<User>(storedUser)
 
-    // 在数据变化时，将新的用户数据保存到 localStorage 中
-    subscribe(currentUser => {
-        if (browser) {
-            localStorage.setItem('user', JSON.stringify(currentUser))
-        }
-    })
+    function persist(user: User) {
+        if (browser) localStorage.setItem('user', JSON.stringify(user))
+    }
 
     return {
         subscribe,
-        login: (userData: User) => set(userData),
-        logout: () => set({}),
-        updateUser: (userData: Partial<User>) =>
-            update(currentUser => ({ ...currentUser, ...userData }))
+        login: (userData: User) => { set(userData); persist(userData) },
+        logout: () => { set(defaultUser); persist(defaultUser) },
+        updateUser: (userData: Partial<User>) => {
+            update(current => {
+                const newUser = { ...current, ...userData }
+                persist(newUser)
+                return newUser
+            })
+        },
+        hasPermission: (perm: string) => {
+            const current = get({ subscribe })
+            return Array.isArray(current.permissions) && current.permissions.includes(perm)
+        }
     }
 }
 

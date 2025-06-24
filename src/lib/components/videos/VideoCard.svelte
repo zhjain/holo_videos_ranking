@@ -21,7 +21,7 @@
         }
     }
 
-    let { video, isAdmin } = $props()
+    let { video, canEditVideo } = $props()
 
     let videoType = $state(video.video_type)
     const videoTypes = [
@@ -129,7 +129,7 @@
 <div class="relative z-0 overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
     <!-- 右上角操作区域 -->
     <div class="absolute right-2 top-2 z-10 flex items-center space-x-2">
-        {#if isAdmin}
+        {#if canEditVideo}
             <!-- 视频类型选择 -->
             <div class="relative" use:clickoutside={closeDropdown}>
                 <button
@@ -205,7 +205,7 @@
         <div class="flex flex-1 flex-col p-4">
             <h3
                 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white
-                {isAdmin ? 'mr-16' : 'mr-10'}">
+                {canEditVideo ? 'mr-16' : 'mr-10'}">
                 {video.video_title}
             </h3>
 
