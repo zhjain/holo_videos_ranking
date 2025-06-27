@@ -52,7 +52,7 @@ export const ssr = ({ request }: RequestEvent): boolean => {
 
 export const load: PageLoad = async ({ fetch }) => {
     const response = await fetch(
-        `/api/rankings/videos?page=1&limit=20&type=all&timeRange=all`
+        `/api/rankings/videos?num=1&size=20&type=all&timeRange=all`
     )
     const result = await response.json()
 

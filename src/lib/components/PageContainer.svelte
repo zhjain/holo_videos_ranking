@@ -49,7 +49,7 @@ async function loadRankings() {
     if (currentPage === 1) rankings = [];
     try {
         const { data } = await customFetch<any>(
-            `/api/rankings/videos?page=${currentPage}&limit=20&type=${selectedVideoType}&timeRange=${selectedTimeRange}`
+            `/api/rankings/videos?num=${currentPage}&size=20&type=${selectedVideoType}&timeRange=${selectedTimeRange}`
         );
         rankings = [...rankings, ...data.records];
         hasMore = data.records.length > 0;
