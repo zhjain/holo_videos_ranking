@@ -19,21 +19,21 @@ export async function customFetch<T>(
             try {
                 await refreshTokenPromise;
             } catch (error) {
-                authStore.logout()
-                userStore.logout()
-                throw new Error('Token验证失败，请重新登录');
+                authStore.logout();
+                userStore.logout();
+                throw new Error('会话已过期，请重新登录');
             } finally {
                 refreshTokenPromise = null;
             }
         }
     }
-    // TODO 这里有问题, 如果token不存在的话会传`Bearer `, 应该改成不传Authorization
     let headers: HeadersInit = {
         'Content-Type': 'application/json',
         ...options.headers
-    }
-    if (get(authStore).token) {
-        headers = { ...headers, Authorization: `Bearer ${get(authStore).token}` }
+    };
+    const currentToken = get(authStore).token;
+    if (currentToken) {
+        headers = { ...headers, Authorization: `Bearer ${currentToken}` };
     }
 
     const response = await fetch(url, {
@@ -54,7 +54,7 @@ async function refreshToken(): Promise<void> {
         const { code, data } = await response.json();
 
         if (code === 200) {
-            authStore.refresh({ token: data.token, expires: 15 * 60 });
+            authStore.refresh({ token: data.token, expires: Date.now() + 15 * 60 * 1000 });
         } else {
             throw new Error('令牌刷新失败');
         }

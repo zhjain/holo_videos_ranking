@@ -13,10 +13,16 @@ export interface User {
 const defaultUser: User = {}
 
 function createUserStore() {
-    const storedUser =
-        browser && localStorage.getItem('user')
-            ? JSON.parse(localStorage.getItem('user') as string)
-            : defaultUser
+    let storedUser = defaultUser
+    if (browser) {
+        try {
+            const userData = localStorage.getItem('user')
+            storedUser = userData ? JSON.parse(userData) : defaultUser
+        } catch (e) {
+            console.error('Failed to parse user data from localStorage', e)
+            localStorage.removeItem('user')
+        }
+    }
 
     const { subscribe, set, update } = writable<User>(storedUser)
 

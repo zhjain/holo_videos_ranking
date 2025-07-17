@@ -33,6 +33,7 @@ function createAuthStore() {
         },
         isTokenValid: () => {
             const current = get({ subscribe })
+            console.log(current.token, current.expires);
             return !!current.token && current.expires! > Date.now()
         }
     }
